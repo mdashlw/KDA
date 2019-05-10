@@ -12,18 +12,18 @@ import kotlin.reflect.KFunction
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.functions
 
-@Suppress("LeakingThis")
 abstract class Command {
     abstract val name: String
     open val aliases: List<String>? = null
     open val description: String = "(No description provided)"
     open var usage: String = ""
     open var examples: List<String>? = null
-    open var memberPermissions: List<Permission>? = null // Set?
-    open var selfPermissions: List<Permission>? = null // Set?
+    open var memberPermissions: List<Permission>? = null
+    open var selfPermissions: List<Permission>? = null
     open val displayInHelp: Boolean = true
     open val sendTyping: Boolean = false
 
+    @Suppress("UNCHECKED_CAST")
     val functions: List<KFunction<Unit>> =
         javaClass.kotlin.functions
             .filter { it.findAnnotation<CommandFunction>() != null }

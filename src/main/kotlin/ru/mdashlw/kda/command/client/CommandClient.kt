@@ -14,6 +14,7 @@ import ru.mdashlw.kda.command.exceptionhandler.ExceptionHandler
 import ru.mdashlw.kda.command.exceptionhandler.impl.*
 import ru.mdashlw.kda.command.exceptionhandler.register
 import ru.mdashlw.kda.command.exceptionhandler.uncaught.UncaughtExceptionHandler
+import ru.mdashlw.kda.command.guildsettings.impl.EmptyGuildSettings
 import ru.mdashlw.kda.command.guildsettings.provider.GuildSettingsProvider
 import ru.mdashlw.kda.command.internal.findCommand
 import ru.mdashlw.kda.command.internal.handler.CommandHandler
@@ -29,7 +30,7 @@ class CommandClient(
     val owner: Long,
     val prefix: String,
     val executor: CoroutineContext,
-    val guildSettingsProvider: GuildSettingsProvider,
+    val guildSettingsProvider: GuildSettingsProvider?,
     val uncaughtExceptionHandler: UncaughtExceptionHandler,
     val replies: Replies,
     val colors: Colors,
@@ -83,7 +84,7 @@ class CommandClient(
 
         val guild = event.guild
         var content = event.message.contentRaw.trim().removeExtraSpaces()
-        val guildSettings = guildSettingsProvider.provide(guild)
+        val guildSettings = guildSettingsProvider?.provide(guild) ?: EmptyGuildSettings
 
         if (!content.startsWith(guildSettings.prefix, true)) {
             return

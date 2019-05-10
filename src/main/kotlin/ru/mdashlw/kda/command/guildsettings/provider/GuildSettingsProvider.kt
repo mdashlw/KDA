@@ -4,5 +4,5 @@ import net.dv8tion.jda.api.entities.Guild
 import ru.mdashlw.kda.command.guildsettings.GuildSettings
 
 interface GuildSettingsProvider {
-    fun provide(guild: Guild): GuildSettings
+    fun provide(guild: Guild): GuildSettings?
 }

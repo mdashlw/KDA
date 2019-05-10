@@ -17,7 +17,6 @@ import ru.mdashlw.kda.command.emotes.impl.DefaultEmotes
 import ru.mdashlw.kda.command.exceptionhandler.uncaught.UncaughtExceptionHandler
 import ru.mdashlw.kda.command.exceptionhandler.uncaught.impl.DefaultUncaughtExceptionHandler
 import ru.mdashlw.kda.command.guildsettings.provider.GuildSettingsProvider
-import ru.mdashlw.kda.command.guildsettings.provider.impl.EmptyGuildSettingsProvider
 import ru.mdashlw.kda.command.replies.Replies
 import ru.mdashlw.kda.command.replies.impl.DefaultReplies
 import java.util.*
@@ -64,7 +63,7 @@ class KdaBuilder : Builder<JDA>() {
         lateinit var prefix: String
         var executor: CoroutineContext =
             Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()).asCoroutineDispatcher()
-        var guildSettingsProvider: GuildSettingsProvider = EmptyGuildSettingsProvider
+        var guildSettingsProvider: GuildSettingsProvider? = null
         var uncaughtExceptionHandler: UncaughtExceptionHandler = DefaultUncaughtExceptionHandler
         var replies: Replies = DefaultReplies
         var colors: Colors = DefaultColors

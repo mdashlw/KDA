@@ -2,8 +2,8 @@ package ru.mdashlw.kda.pagination
 
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.entities.Message
-import net.dv8tion.jda.api.entities.MessageChannel
 import net.dv8tion.jda.api.entities.MessageEmbed
+import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.entities.User
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException
@@ -14,20 +14,26 @@ import java.time.Duration
 
 class Pagination<T>(
     private val api: JDA,
-    private val channel: MessageChannel,
-    private val users: List<Long>,
+    private val channelId: Long,
+    private val usersIds: List<Long>,
     itemsOnPage: Int,
     private val timeout: Duration,
     content: Collection<T>,
-    private val creator: EmbedBuilder.(Collection<T>) -> Unit
+    private val embed: EmbedBuilder.(Collection<T>) -> Unit
 ) {
     private val chunked = content.chunked(itemsOnPage)
     private var page: Int = 0
-
-    lateinit var message: Message
+    private var messageId: Long = 0
 
     private inline val total: Int
         get() = chunked.size
+
+    private val channel: TextChannel
+        get() = api.getTextChannelById(channelId)
+            ?: throw IllegalStateException("Could not find the pagination text channel with ID $channelId")
+
+    private val message: Message
+        get() = channel.retrieveMessageById(messageId).complete()
 
     fun display() {
         if (total == 1) {
@@ -35,7 +41,7 @@ class Pagination<T>(
             return
         } else {
             channel.sendMessage(generateEmbed()).queue {
-                message = it
+                messageId = it.idLong
 
                 it.addReaction(ARROW_LEFT).queue()
                 it.addReaction(ARROW_RIGHT).queue()
@@ -50,7 +56,7 @@ class Pagination<T>(
                 removeReaction(ARROW_RIGHT, api.selfUser)
             },
             predicate = {
-                it.channel == channel && it.messageIdLong == message.idLong && it.user.idLong in users
+                it.channel == channel && it.messageIdLong == message.idLong && it.user.idLong in usersIds
             }
         ) {
             when (it.reactionEmote.name) {
@@ -83,7 +89,7 @@ class Pagination<T>(
             text = "Page ${page + 1} / $total"
         }
 
-        creator(chunked[page])
+        embed(chunked[page])
     }
 
     private fun canPaginate(page: Int): Boolean = page in 0 until total
