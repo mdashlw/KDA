@@ -57,13 +57,21 @@ class Pagination<T>(
                 ARROW_LEFT -> {
                     if (canPaginate(page - 1)) {
                         paginate(page - 1)
-                        removeReaction(ARROW_LEFT, it.user)
+
+                        try {
+                            it.reaction.removeReaction().queue()
+                        } catch (exception: InsufficientPermissionException) {
+                        }
                     }
                 }
                 ARROW_RIGHT -> {
                     if (canPaginate(page + 1)) {
                         paginate(page + 1)
-                        removeReaction(ARROW_RIGHT, it.user)
+
+                        try {
+                            it.reaction.removeReaction().queue()
+                        } catch (exception: InsufficientPermissionException) {
+                        }
                     }
                 }
             }
