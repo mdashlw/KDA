@@ -59,7 +59,7 @@ class Pagination<T>(
                         paginate(page - 1)
 
                         try {
-                            it.reaction.removeReaction().queue()
+                            it.reaction.removeReaction(it.user).queue()
                         } catch (exception: InsufficientPermissionException) {
                         }
                     }
@@ -69,7 +69,7 @@ class Pagination<T>(
                         paginate(page + 1)
 
                         try {
-                            it.reaction.removeReaction().queue()
+                            it.reaction.removeReaction(it.user).queue()
                         } catch (exception: InsufficientPermissionException) {
                         }
                     }

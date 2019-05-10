@@ -20,6 +20,7 @@ object CommandCommandContext : CommandContext<Command> {
     private fun find(name: String, parent: Command? = null): Command? {
         var command = findCommand(name, parent)
 
+        // it doesnt work atm, no clue why, lazy to fix
         if (command != null && ' ' in name) {
             command = find(name.split(' ')[1], command)
         }
