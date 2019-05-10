@@ -14,7 +14,7 @@ object CommandCommandContext : CommandContext<Command> {
         text: String,
         arg: String
     ): CommandContext.Result<Command> =
-        find(arg)?.let { CommandContext.Result(it) }
+        find(text)?.let { CommandContext.Result(it) }
             ?: throw CommandContext.Error("Command does not exist")
 
     private fun find(name: String, parent: Command? = null): Command? {
