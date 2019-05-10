@@ -92,7 +92,7 @@ class CommandClient(
 
         val channel = event.channel
         val message = event.message
-        content = content.substring(guildSettings.prefix.length)
+        content = content.substring(guildSettings.prefix.length).trim()
         val args = content.split(" ")
 
         val command = findCommand(args[0]) ?: return
