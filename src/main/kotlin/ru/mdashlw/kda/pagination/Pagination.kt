@@ -15,7 +15,7 @@ import java.time.Duration
 class Pagination<T>(
     private val api: JDA,
     private val channelId: Long,
-    private val usersIds: List<Long>,
+    private val usersIds: Set<Long>,
     itemsOnPage: Int,
     private val timeout: Duration,
     content: Collection<T>,

@@ -8,7 +8,7 @@ import java.time.Duration
 class PaginationBuilder<T>(private val content: Collection<T>) : Builder<Pagination<T>>() {
     lateinit var api: JDA
     var channelId: Long = 0
-    lateinit var userIds: List<Long>
+    lateinit var userIds: Set<Long>
     var itemsOnPage: Int = 25
     var timeout: Duration = Duration.ofMinutes(10)
     lateinit var embed: EmbedBuilder.(Collection<T>) -> Unit
