@@ -18,6 +18,7 @@ class Pagination<T>(
     private val usersIds: Set<Long>,
     itemsOnPage: Int,
     private val timeout: Duration,
+    autoDisplay: Boolean,
     content: Collection<T>,
     private val embed: EmbedBuilder.(Collection<T>) -> Unit
 ) {
@@ -34,6 +35,12 @@ class Pagination<T>(
 
     private val message: Message
         get() = channel.retrieveMessageById(messageId).complete()
+
+    init {
+        if (autoDisplay) {
+            display()
+        }
+    }
 
     fun display() {
         if (total == 1) {

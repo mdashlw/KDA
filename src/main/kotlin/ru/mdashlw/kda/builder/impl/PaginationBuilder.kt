@@ -11,6 +11,7 @@ class PaginationBuilder<T>(private val content: Collection<T>) : Builder<Paginat
     lateinit var userIds: Set<Long>
     var itemsOnPage: Int = 25
     var timeout: Duration = Duration.ofMinutes(10)
+    var autoDisplay: Boolean = true
     lateinit var embed: EmbedBuilder.(Collection<T>) -> Unit
 
     fun embed(block: EmbedBuilder.(Collection<T>) -> Unit) {
@@ -24,6 +25,7 @@ class PaginationBuilder<T>(private val content: Collection<T>) : Builder<Paginat
             userIds,
             itemsOnPage,
             timeout,
+            autoDisplay,
             content,
             embed
         )
