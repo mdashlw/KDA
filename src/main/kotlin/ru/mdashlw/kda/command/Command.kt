@@ -83,9 +83,11 @@ abstract class Command {
         fun reply(block: EmbedBuilder.() -> Unit): MessageAction {
             val builder = EmbedBuilder()
 
-            CommandClient.INSTANCE.replyModifiers.forEach {
-                builder.run(it.modify(this@Command, this@Event))
-            }
+            CommandClient.INSTANCE.replyModifiers
+                .filter { it.check(this@Command, this@Event) }
+                .forEach {
+                    builder.run(it.modify(this@Command, this@Event))
+                }
 
             return reply(builder.apply(block).build())
         }
