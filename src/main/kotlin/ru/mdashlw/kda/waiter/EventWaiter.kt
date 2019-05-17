@@ -9,20 +9,20 @@ import kotlin.reflect.KClass
 object EventWaiter : EventListener {
     val executor: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
 
-    val events = mutableMapOf<KClass<out GenericEvent>, WaitingEvent<GenericEvent>>()
+    val events = mutableMapOf<KClass<out GenericEvent>, ArrayList<WaitingEvent<GenericEvent>>>()
 
     override fun onEvent(event: GenericEvent) {
-        val waitingEvent = events[event::class] ?: return
+        val waitingEvents = events[event::class] ?: return
 
-        if (!waitingEvent.predicate(event)) {
-            return
-        }
+        waitingEvents
+            .filter { it.predicate(event) }
+            .forEach {
+                it.action(event)
+                it.called += 1
 
-        waitingEvent.action(event)
-        waitingEvent.called += 1
-
-        if (waitingEvent.amount >= waitingEvent.called) {
-            waitingEvent.unregister()
-        }
+                if (it.amount >= it.called) {
+                    it.unregister()
+                }
+            }
     }
 }

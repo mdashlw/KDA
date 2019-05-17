@@ -6,6 +6,7 @@ import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
 
+@Suppress("UNCHECKED_CAST")
 class WaitingEvent<T : GenericEvent>(
     private val target: KClass<T>,
     val amount: Int,
@@ -17,13 +18,12 @@ class WaitingEvent<T : GenericEvent>(
     var called: Int = 0
     private var timeoutJob: ScheduledFuture<*>? = null
 
-    @Suppress("UNCHECKED_CAST")
     fun register() {
-        EventWaiter.events[target] = this as WaitingEvent<GenericEvent>
+        EventWaiter.events.getOrPut(target) { ArrayList() }.add(this as WaitingEvent<GenericEvent>)
 
         if (!timeout.isZero) {
             timeoutJob = EventWaiter.executor.schedule(
-                { unregister() },
+                ::unregister,
                 timeout.seconds,
                 TimeUnit.SECONDS
             )
@@ -31,7 +31,8 @@ class WaitingEvent<T : GenericEvent>(
     }
 
     fun unregister() {
-        EventWaiter.events -= target
+        EventWaiter.events[target]?.remove(this as WaitingEvent<GenericEvent>)
+
         timeoutJob?.cancel(false)
         onCancel()
     }
