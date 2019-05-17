@@ -15,7 +15,7 @@ import kotlin.reflect.full.functions
 abstract class Command {
     abstract val name: String
     open val aliases: List<String>? = null
-    open val description: String = "(No description provided)"
+    open val description: String = "<no description provided>"
     open var usage: String = ""
     open var examples: List<String>? = null
     open var memberPermissions: List<Permission>? = null

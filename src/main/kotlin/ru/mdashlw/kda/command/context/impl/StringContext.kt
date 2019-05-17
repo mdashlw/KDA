@@ -6,17 +6,17 @@ import ru.mdashlw.kda.command.context.CommandContext
 import kotlin.reflect.KParameter
 import kotlin.reflect.full.findAnnotation
 
-object StringContext : CommandContext<String> {
+object StringContext : CommandContext<String>() {
     override fun resolve(
         parameter: KParameter,
         event: Command.Event,
         index: Int,
         text: String,
         arg: String
-    ): CommandContext.Result<String> =
+    ): Result<String> =
         if (parameter.findAnnotation<Text>() != null) {
-            CommandContext.Result(text, text.count { it == ' ' })
+            text.map(text.count { it == ' ' })
         } else {
-            CommandContext.Result(arg)
+            arg.map()
         }
 }
