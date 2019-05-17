@@ -5,7 +5,6 @@ import ru.mdashlw.kda.command.context.CommandContext
 import ru.mdashlw.kda.command.internal.findCommand
 import kotlin.reflect.KParameter
 
-// idk how to name this
 object CommandCommandContext : CommandContext<Command> {
     override fun resolve(
         parameter: KParameter,
@@ -15,14 +14,13 @@ object CommandCommandContext : CommandContext<Command> {
         arg: String
     ): CommandContext.Result<Command> =
         find(text)?.let { CommandContext.Result(it) }
-            ?: throw CommandContext.Error("Command does not exist")
+            ?: throw CommandContext.Error("Command does not exist.")
 
     private fun find(name: String, parent: Command? = null): Command? {
-        var command = findCommand(name, parent)
+        val command = findCommand(name, parent)
 
-        // it doesnt work atm, no clue why, lazy to fix
         if (command != null && ' ' in name) {
-            command = find(name.split(' ')[1], command)
+            return find(name.substringAfter(' '), command)
         }
 
         return command

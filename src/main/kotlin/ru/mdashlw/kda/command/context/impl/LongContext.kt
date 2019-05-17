@@ -14,5 +14,5 @@ object LongContext : CommandContext<Long> {
         arg: String
     ): CommandContext.Result<Long> =
         arg.removeNumberFormat().toLongOrNull()?.let { CommandContext.Result(it) }
-            ?: throw CommandContext.Error("Input is not a number")
+            ?: throw CommandContext.Error("Input is not a number.")
 }

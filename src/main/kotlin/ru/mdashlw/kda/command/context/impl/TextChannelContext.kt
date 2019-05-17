@@ -16,5 +16,5 @@ object TextChannelContext : CommandContext<TextChannel> {
         event.message.mentionedChannels.getOrNull(index)?.let { CommandContext.Result(it) }
             ?: event.guild.getTextChannelsByName(arg, true).firstOrNull()?.let { CommandContext.Result(it) }
             ?: arg.toLongOrNull()?.let { event.guild.getTextChannelById(it) }?.let { CommandContext.Result(it) }
-            ?: throw CommandContext.Error("Text channel #$arg does not exist")
+            ?: throw CommandContext.Error("Text channel #$arg does not exist.")
 }

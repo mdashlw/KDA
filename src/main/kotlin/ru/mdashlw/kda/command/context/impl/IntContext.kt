@@ -14,5 +14,5 @@ object IntContext : CommandContext<Int> {
         arg: String
     ): CommandContext.Result<Int> =
         arg.removeNumberFormat().toIntOrNull()?.let { CommandContext.Result(it) }
-            ?: throw CommandContext.Error("Input is not a number")
+            ?: throw CommandContext.Error("Input is not a number.")
 }

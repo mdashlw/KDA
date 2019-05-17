@@ -14,5 +14,5 @@ object BooleanContext : CommandContext<Boolean> {
         arg: String
     ): CommandContext.Result<Boolean> =
         arg.takeIf(String::isBoolean)?.toBoolean()?.let { CommandContext.Result(it) }
-            ?: throw CommandContext.Error("Input is a not logical type (true/false)")
+            ?: throw CommandContext.Error("Input is a not logical type (true/false).")
 }
