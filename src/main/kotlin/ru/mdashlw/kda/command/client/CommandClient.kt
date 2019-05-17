@@ -2,6 +2,7 @@ package ru.mdashlw.kda.command.client
 
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import ru.mdashlw.kda.command.Command
@@ -29,6 +30,7 @@ import kotlin.reflect.KClass
 class CommandClient(
     val owner: Long,
     val prefix: String,
+    val requiresEmbedLinks: Boolean,
     val executor: CoroutineContext,
     val guildSettingsProvider: GuildSettingsProvider?,
     val uncaughtExceptionHandler: UncaughtExceptionHandler,
@@ -99,12 +101,16 @@ class CommandClient(
         val event = command.Event(event.jda, guild, guildSettings, channel, member, message)
 
         GlobalScope.launch(executor) {
+            if (requiresEmbedLinks && !guild.selfMember.hasPermission(channel, Permission.MESSAGE_EMBED_LINKS)) {
+                event.reply("The bot requires **Embed Links** permission.").queue()
+                return@launch
+            }
+
             CommandHandler.handle(command, event, args.drop(1))
         }
     }
 
     companion object {
-        // TODO Change it somehow
         lateinit var INSTANCE: CommandClient
             private set
     }

@@ -29,7 +29,6 @@ class KdaBuilder : Builder<JDA>() {
     var eventManager: IEventManager? = null
     var activity: Activity? = null
     var status: OnlineStatus = OnlineStatus.ONLINE
-    var audio: Boolean = false
     var bulkDeleteSplitting: Boolean = true
     var idle: Boolean = false
 
@@ -46,7 +45,6 @@ class KdaBuilder : Builder<JDA>() {
                 setEventManager(eventManager)
                 setActivity(activity)
                 setStatus(status)
-                setAudioEnabled(audio)
                 setBulkDeleteSplittingEnabled(bulkDeleteSplitting)
                 setIdle(idle)
             }
@@ -61,6 +59,7 @@ class KdaBuilder : Builder<JDA>() {
     class CommandClientBuilder : Builder<CommandClient>() {
         var owner: Long = 0L
         lateinit var prefix: String
+        var requiresEmbedLinks: Boolean = true
         var executor: CoroutineContext =
             Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()).asCoroutineDispatcher()
         var guildSettingsProvider: GuildSettingsProvider? = null
@@ -85,6 +84,7 @@ class KdaBuilder : Builder<JDA>() {
             CommandClient(
                 owner,
                 prefix,
+                requiresEmbedLinks,
                 executor,
                 guildSettingsProvider,
                 uncaughtExceptionHandler,

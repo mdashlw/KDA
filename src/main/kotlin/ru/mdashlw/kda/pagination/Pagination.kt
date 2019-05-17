@@ -63,7 +63,7 @@ class Pagination<T>(
                 removeReaction(ARROW_RIGHT, api.selfUser)
             },
             predicate = {
-                it.channel == channel && it.messageIdLong == message.idLong && it.user.idLong in usersIds
+                it.channel.idLong == channelId && it.messageIdLong == message.idLong && it.user.idLong in usersIds
             }
         ) {
             when (it.reactionEmote.name) {
