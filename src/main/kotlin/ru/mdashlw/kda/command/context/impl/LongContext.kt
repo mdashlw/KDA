@@ -14,5 +14,5 @@ object LongContext : CommandContext<Long>() {
         arg: String
     ): Result<Long> =
         arg.removeNumberFormat().toLongOrNull()?.map()
-            ?: throw Error("Input is not a number.")
+            ?: throw Error(event.localize("contexts.long.not_a_number"))
 }

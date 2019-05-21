@@ -19,20 +19,20 @@ object HelpCommand : Command() {
         val self = api.selfUser
 
         reply {
-            description = "**Use `${guildSettings.prefix}help <command>` for additional info.**"
+            description = localize("commands.help.description", prefix)
 
             author {
-                name = "${self.name} Commands"
+                name = localize("commands.help.title", self.name)
                 icon = self.effectiveAvatarUrl
             }
 
             field {
-                name = "Command"
+                name = localize("commands.help.fields.command.title")
                 value = commands.joinToString("\n", "**", "**", transform = Command::name)
             }
 
             field {
-                name = "Description"
+                name = localize("commands.help.fields.description.title")
                 value = commands.joinToString("\n") { it.description.substringBefore("\n") }
             }
         }.queue()

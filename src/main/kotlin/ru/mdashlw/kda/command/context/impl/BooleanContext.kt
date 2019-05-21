@@ -14,5 +14,5 @@ object BooleanContext : CommandContext<Boolean>() {
         arg: String
     ): Result<Boolean> =
         arg.takeIf(String::isBoolean)?.toBoolean()?.map()
-            ?: throw Error("Input is a not logical type (true/false).")
+            ?: throw Error(event.localize("contexts.boolean.not_a_boolean"))
 }

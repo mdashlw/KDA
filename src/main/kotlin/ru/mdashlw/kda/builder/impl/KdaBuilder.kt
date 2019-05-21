@@ -59,6 +59,7 @@ class KdaBuilder : Builder<JDA>() {
     class CommandClientBuilder : Builder<CommandClient>() {
         var owner: Long = 0L
         lateinit var prefix: String
+        var languages: List<Locale> = listOf(Locale.ENGLISH)
         var requiresEmbedLinks: Boolean = true
         var executor: CoroutineContext =
             Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()).asCoroutineDispatcher()
@@ -84,6 +85,7 @@ class KdaBuilder : Builder<JDA>() {
             CommandClient(
                 owner,
                 prefix,
+                languages,
                 requiresEmbedLinks,
                 executor,
                 guildSettingsProvider,

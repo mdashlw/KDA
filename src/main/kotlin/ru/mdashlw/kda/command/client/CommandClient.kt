@@ -24,12 +24,14 @@ import ru.mdashlw.kda.command.replymodifier.ReplyModifier
 import ru.mdashlw.kda.command.replymodifier.impl.ColorModifier
 import ru.mdashlw.kda.command.replymodifier.register
 import ru.mdashlw.util.string.removeExtraSpaces
+import java.util.*
 import kotlin.coroutines.CoroutineContext
 import kotlin.reflect.KClass
 
 class CommandClient(
     val owner: Long,
     val prefix: String,
+    languages: List<Locale>,
     val requiresEmbedLinks: Boolean,
     val executor: CoroutineContext,
     val guildSettingsProvider: GuildSettingsProvider?,
@@ -42,6 +44,8 @@ class CommandClient(
     val contexts = mutableMapOf<KClass<out Any>, CommandContext<Any>>()
     val exceptionHandlers = mutableMapOf<KClass<out Throwable>, ExceptionHandler<Throwable>>()
     val replyModifiers = mutableListOf<ReplyModifier>()
+
+    val resourceBundles = languages.associateWith { ResourceBundle.getBundle("messages", it) }
 
     init {
         INSTANCE = this
@@ -98,11 +102,23 @@ class CommandClient(
         val args = content.split(' ')
 
         val command = findCommand(args[0]) ?: return
-        val event = command.Event(event.jda, guild, guildSettings, channel, member, message)
+        val event = command.Event(
+            event.jda,
+            guild,
+            author,
+            member,
+            channel,
+            message,
+            guildSettings,
+            guildSettings.prefix,
+            resourceBundles[guildSettings.locale] ?: error("No resource bundle for locale ${guildSettings.locale}")
+        )
 
         GlobalScope.launch(executor) {
             if (requiresEmbedLinks && !guild.selfMember.hasPermission(channel, Permission.MESSAGE_EMBED_LINKS)) {
-                event.reply("The bot requires **Embed Links** permission.").queue()
+                event.run {
+                    reply(localize("replies.no_embed_links_permission")).queue()
+                }
                 return@launch
             }
 

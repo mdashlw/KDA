@@ -14,5 +14,5 @@ object IntContext : CommandContext<Int>() {
         arg: String
     ): Result<Int> =
         arg.removeNumberFormat().toIntOrNull()?.map()
-            ?: throw Error("Input is not a number.")
+            ?: throw Error(event.localize("contexts.int.not_a_number"))
 }

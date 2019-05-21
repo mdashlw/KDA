@@ -8,6 +8,9 @@ import ru.mdashlw.kda.builder.impl.EmbedBuilder
 import ru.mdashlw.kda.command.annotations.CommandFunction
 import ru.mdashlw.kda.command.client.CommandClient
 import ru.mdashlw.kda.command.guildsettings.GuildSettings
+import ru.mdashlw.kda.pagination.Pagination
+import java.time.Duration
+import java.util.*
 import kotlin.reflect.KFunction
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.functions
@@ -32,29 +35,9 @@ abstract class Command {
 
     val subCommands = mutableMapOf<String, SubCommand>()
 
-    protected fun fixMeta() {
-        val name = resolveNames(this).joinToString(" ", postfix = " ")
-
+    protected open fun fixMeta() {
         usage = (name + usage).trim()
         examples = examples?.map { (name + it).trim() }
-
-        if (memberPermissions == null && this is SubCommand) {
-            memberPermissions = parent.memberPermissions
-        }
-
-        if (selfPermissions == null && this is SubCommand) {
-            selfPermissions = parent.selfPermissions
-        }
-    }
-
-    private fun resolveNames(command: Command): List<String> {
-        val names = mutableListOf(command.name)
-
-        if (command is SubCommand) {
-            names += resolveNames(command.parent)
-        }
-
-        return names.reversed()
     }
 
     open fun register() {
@@ -69,11 +52,24 @@ abstract class Command {
     inner class Event(
         val api: JDA,
         val guild: Guild,
-        val guildSettings: GuildSettings,
-        val channel: TextChannel,
+        val user: User,
         val member: Member,
-        val message: Message
+        val channel: TextChannel,
+        val message: Message,
+        val guildSettings: GuildSettings,
+        val prefix: String,
+        val localization: ResourceBundle
     ) {
+        fun localize(key: String, vararg parameters: Any): String {
+            var string = localization.getString(key) ?: key
+
+            parameters.forEachIndexed { index, value ->
+                string = string.replace("{$index}", value.toString())
+            }
+
+            return string
+        }
+
         fun reply(text: String): MessageAction =
             channel.sendMessage(text)
 
@@ -92,6 +88,25 @@ abstract class Command {
             return reply(builder.apply(block).build())
         }
 
+        fun <T> replyPagination(
+            content: Collection<T>,
+            timeout: Duration = Duration.ofMinutes(10),
+            itemsOnPage: Int = 15,
+            block: EmbedBuilder.(Collection<T>) -> Unit
+        ) {
+            Pagination(
+                api, channel.idLong, setOf(user.idLong), timeout, itemsOnPage, content
+            ) {
+                CommandClient.INSTANCE.replyModifiers
+                    .filter { it.check(this@Command, this@Event) }
+                    .forEach {
+                        run(it.modify(this@Command, this@Event))
+                    }
+
+                block(it)
+            }.display()
+        }
+
         fun replyHelp(): MessageAction =
             CommandClient.INSTANCE.replies.help(this@Command, this@Event)
 
@@ -105,7 +120,7 @@ abstract class Command {
             CommandClient.INSTANCE.replies.error(this@Command, this@Event, message)
 
         fun copy(command: Command): Event =
-            command.Event(api, guild, guildSettings, channel, member, message)
+            command.Event(api, guild, user, member, channel, message, guildSettings, prefix, localization)
     }
 
     class Help : Exception()

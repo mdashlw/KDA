@@ -9,11 +9,11 @@ object IllegalUsageHandler : ExceptionHandler<IllegalUsageException> {
     override fun handle(command: Command, event: Command.Event, exception: IllegalUsageException) {
         event.reply {
             color = CommandClient.INSTANCE.colors.error
-            title = "Error"
+            title = event.localize("exceptionhandlers.illegal_usage.title")
             description = exception.message.toString()
 
             footer {
-                text = "${event.guildSettings.prefix}${command.usage}"
+                text = "${event.prefix}${command.usage}"
             }
         }.queue()
     }

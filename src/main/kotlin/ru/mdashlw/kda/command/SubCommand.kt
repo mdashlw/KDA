@@ -1,6 +1,31 @@
 package ru.mdashlw.kda.command
 
 abstract class SubCommand(val parent: Command) : Command() {
+    override fun fixMeta() {
+        val name = resolveNames(this).joinToString(" ", postfix = " ")
+
+        usage = (name + usage).trim()
+        examples = examples?.map { (name + it).trim() }
+
+        if (memberPermissions == null) {
+            memberPermissions = parent.memberPermissions
+        }
+
+        if (selfPermissions == null) {
+            selfPermissions = parent.selfPermissions
+        }
+    }
+
+    private fun resolveNames(command: Command): List<String> {
+        val names = mutableListOf(command.name)
+
+        if (command is SubCommand) {
+            names += resolveNames(command.parent)
+        }
+
+        return names.reversed()
+    }
+
     override fun register() {
         fixMeta()
 

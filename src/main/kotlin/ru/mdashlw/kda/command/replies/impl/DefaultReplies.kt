@@ -7,7 +7,6 @@ import ru.mdashlw.kda.command.client.CommandClient
 import ru.mdashlw.kda.command.replies.Replies
 
 object DefaultReplies : Replies {
-    @Suppress("NestedLambdaShadowedImplicitParameter")
     override var help: (command: Command, event: Command.Event) -> MessageAction =
         { command, event ->
             val self = event.api.selfUser
@@ -21,12 +20,12 @@ object DefaultReplies : Replies {
                 }
 
                 footer {
-                    text = "Do not include <> or [] — They indicate <required> and [optional] arguments."
+                    text = event.localize("replies.help.footer")
                 }
 
                 command.aliases?.let {
                     field {
-                        name = "Aliases"
+                        name = event.localize("replies.help.fields.aliases.title")
                         value = it.joinToString()
                         inline = false
                     }
@@ -37,15 +36,15 @@ object DefaultReplies : Replies {
                 }
 
                 field {
-                    name = "Usage"
-                    value = "`${event.guildSettings.prefix}${command.usage}`"
+                    name = event.localize("replies.help.fields.usage.title")
+                    value = "`${event.prefix}${command.usage}`"
                     inline = false
                 }
 
                 command.examples?.let {
                     field {
-                        name = "Examples"
-                        value = it.joinToString("\n") { "${event.guildSettings.prefix}$it" }
+                        name = event.localize("replies.help.fields.examples.title")
+                        value = it.joinToString("\n") { "${event.prefix}$it" }
                         inline = false
                     }
                 }
@@ -57,14 +56,14 @@ object DefaultReplies : Replies {
 
                     command.memberPermissions?.let {
                         field {
-                            name = "Required Permissions"
+                            name = event.localize("replies.help.fields.member_permissions.title")
                             value = it.joinToString("\n", "**", "**", transform = Permission::getName)
                         }
                     }
 
                     command.selfPermissions?.let {
                         field {
-                            name = "Bot Permissions"
+                            name = event.localize("replies.help.fields.self_permissions.title")
                             value = it.joinToString("\n", "**", "**", transform = Permission::getName)
                         }
                     }
@@ -76,7 +75,7 @@ object DefaultReplies : Replies {
         { _, event, message ->
             event.reply {
                 color = CommandClient.INSTANCE.colors.success
-                title = "Success"
+                title = event.localize("replies.success.title")
                 description = "${CommandClient.INSTANCE.emotes.success} $message"
             }
         }
@@ -85,7 +84,7 @@ object DefaultReplies : Replies {
         { _, event, message ->
             event.reply {
                 color = CommandClient.INSTANCE.colors.warning
-                title = "Warning"
+                title = event.localize("replies.warning.title")
                 description = "${CommandClient.INSTANCE.emotes.warning} $message"
             }
         }
@@ -94,7 +93,7 @@ object DefaultReplies : Replies {
         { _, event, message ->
             event.reply {
                 color = CommandClient.INSTANCE.colors.error
-                title = "Error"
+                title = event.localize("replies.error.title")
                 description = "${CommandClient.INSTANCE.emotes.error} $message"
             }
         }

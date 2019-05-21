@@ -10,12 +10,12 @@ object DefaultUncaughtExceptionHandler : UncaughtExceptionHandler {
 
         event.reply {
             color = CommandClient.INSTANCE.colors.error
-            title = "Uncaught Error"
+            title = event.localize("exceptionhandlers.uncaught.default.title")
             description = exception.toString()
 
             event.api.getUserById(CommandClient.INSTANCE.owner)?.let {
                 footer {
-                    text = "Report to the developer, ${it.asTag}"
+                    text = event.localize("exceptionhandlers.uncaught.default.footer", it.asTag)
                     icon = it.effectiveAvatarUrl
                 }
             }

@@ -8,8 +8,10 @@ import ru.mdashlw.kda.command.exceptions.NoSelfPermissionsException
 object NoSelfPermissionsHandler : ExceptionHandler<NoSelfPermissionsException> {
     override fun handle(command: Command, event: Command.Event, exception: NoSelfPermissionsException) {
         event.replyError(
-            "I need the following permissions to perform this command:\n" +
-                    command.selfPermissions!!.joinToString("\n", "**", "**", transform = Permission::getName)
+            event.localize(
+                "exceptionhandlers.no_self_permissions",
+                command.selfPermissions!!.joinToString("\n", "**", "**", transform = Permission::getName)
+            )
         ).queue()
     }
 }
