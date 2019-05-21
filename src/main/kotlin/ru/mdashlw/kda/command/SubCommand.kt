@@ -2,10 +2,10 @@ package ru.mdashlw.kda.command
 
 abstract class SubCommand(val parent: Command) : Command() {
     override fun fixMeta() {
-        val name = resolveNames(this).joinToString(" ", postfix = " ")
+        val name = resolveNames(this).joinToString(" ")
 
-        usage = (name + usage).trim()
-        examples = examples?.map { (name + it).trim() }
+        usage = "$name $usage".trim()
+        examples = examples?.map { "$name $it".trim() }
 
         if (memberPermissions == null) {
             memberPermissions = parent.memberPermissions

@@ -35,8 +35,8 @@ abstract class Command {
     val subCommands = mutableMapOf<String, SubCommand>()
 
     protected open fun fixMeta() {
-        usage = (name + usage).trim()
-        examples = examples?.map { (name + it).trim() }
+        usage = "$name $usage".trim()
+        examples = examples?.map { "$name $it".trim() }
     }
 
     open fun register() {
