@@ -16,5 +16,5 @@ object TextChannelContext : CommandContext<TextChannel>() {
         event.message.mentionedChannels.getOrNull(index)?.map()
             ?: event.guild.getTextChannelsByName(arg, true).firstOrNull()?.map()
             ?: arg.toLongOrNull()?.let { event.guild.getTextChannelById(it) }?.map()
-            ?: throw Error(event.localize("contexts.textchannel.does_not_exist", arg))
+            ?: throw Error(event.localize("contexts.textchannel.unknown", arg))
 }

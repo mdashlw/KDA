@@ -27,12 +27,12 @@ object HelpCommand : Command() {
             }
 
             field {
-                name = localize("commands.help.fields.command.title")
+                name = localize("commands.help.fields.command.name")
                 value = commands.joinToString("\n", "**", "**", transform = Command::name)
             }
 
             field {
-                name = localize("commands.help.fields.description.title")
+                name = localize("commands.help.fields.description.name")
                 value = commands.joinToString("\n") { it.description.substringBefore("\n") }
             }
         }.queue()

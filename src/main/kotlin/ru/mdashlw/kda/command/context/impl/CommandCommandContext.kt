@@ -14,7 +14,7 @@ object CommandCommandContext : CommandContext<Command>() {
         arg: String
     ): Result<Command> =
         find(text)?.map()
-            ?: throw Error(event.localize("contexts.command.does_not_exist", text))
+            ?: throw Error(event.localize("contexts.command.unknown", text))
 
     private fun find(name: String, parent: Command? = null): Command? {
         val command = findCommand(name, parent)

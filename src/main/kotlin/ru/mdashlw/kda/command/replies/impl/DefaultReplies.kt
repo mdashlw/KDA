@@ -25,7 +25,7 @@ object DefaultReplies : Replies {
 
                 command.aliases?.let {
                     field {
-                        name = event.localize("replies.help.fields.aliases.title")
+                        name = event.localize("replies.help.fields.aliases.name")
                         value = it.joinToString()
                         inline = false
                     }
@@ -36,14 +36,14 @@ object DefaultReplies : Replies {
                 }
 
                 field {
-                    name = event.localize("replies.help.fields.usage.title")
+                    name = event.localize("replies.help.fields.usage.name")
                     value = "`${event.prefix}${command.usage}`"
                     inline = false
                 }
 
                 command.examples?.let {
                     field {
-                        name = event.localize("replies.help.fields.examples.title")
+                        name = event.localize("replies.help.fields.examples.name")
                         value = it.joinToString("\n") { "${event.prefix}$it" }
                         inline = false
                     }
@@ -56,14 +56,14 @@ object DefaultReplies : Replies {
 
                     command.memberPermissions?.let {
                         field {
-                            name = event.localize("replies.help.fields.member_permissions.title")
+                            name = event.localize("replies.help.fields.member_permissions.name")
                             value = it.joinToString("\n", "**", "**", transform = Permission::getName)
                         }
                     }
 
                     command.selfPermissions?.let {
                         field {
-                            name = event.localize("replies.help.fields.self_permissions.title")
+                            name = event.localize("replies.help.fields.self_permissions.name")
                             value = it.joinToString("\n", "**", "**", transform = Permission::getName)
                         }
                     }
