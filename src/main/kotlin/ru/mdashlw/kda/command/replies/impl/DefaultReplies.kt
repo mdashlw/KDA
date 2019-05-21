@@ -13,7 +13,7 @@ object DefaultReplies : Replies {
 
             event.reply {
                 title = "`${command.name}`"
-                description = command.description
+                description = command.description(event)
 
                 thumbnail {
                     url = self.effectiveAvatarUrl

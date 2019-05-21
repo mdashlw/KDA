@@ -18,7 +18,6 @@ import kotlin.reflect.full.functions
 abstract class Command {
     abstract val name: String
     open val aliases: List<String>? = null
-    open val description: String = "<no description provided>"
     open var usage: String = ""
     open var examples: List<String>? = null
     open var memberPermissions: List<Permission>? = null
@@ -46,6 +45,8 @@ abstract class Command {
         CommandClient.INSTANCE.commands[name.toLowerCase()] = this
         aliases?.forEach { CommandClient.INSTANCE.commands[it.toLowerCase()] = this }
     }
+
+    open fun description(event: Event): String = "<no description provided>"
 
     open fun checkAccess(event: Event): Boolean = true
 

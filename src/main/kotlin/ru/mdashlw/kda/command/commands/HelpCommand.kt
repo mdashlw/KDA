@@ -7,8 +7,9 @@ import ru.mdashlw.kda.command.client.CommandClient
 object HelpCommand : Command() {
     override val name: String = "help"
     override val aliases: List<String>? = listOf("commands", "cmds")
-    override val description: String = "Displays all commands of the bot"
     override var usage: String = "[command]"
+
+    override fun description(event: Event): String = event.localize("commands.help.description")
 
     @CommandFunction
     fun Event.help() {
@@ -19,21 +20,21 @@ object HelpCommand : Command() {
         val self = api.selfUser
 
         reply {
-            description = localize("commands.help.description", prefix)
+            description = localize("commands.help.reply.description", prefix)
 
             author {
-                name = localize("commands.help.title", self.name)
+                name = localize("commands.help.reply.title", self.name)
                 icon = self.effectiveAvatarUrl
             }
 
             field {
-                name = localize("commands.help.fields.command.name")
+                name = localize("commands.help.reply.fields.command.name")
                 value = commands.joinToString("\n", "**", "**", transform = Command::name)
             }
 
             field {
-                name = localize("commands.help.fields.description.name")
-                value = commands.joinToString("\n") { it.description.substringBefore("\n") }
+                name = localize("commands.help.reply.fields.description.name")
+                value = commands.joinToString("\n") { it.description(this@help).substringBefore("\n") }
             }
         }.queue()
     }
