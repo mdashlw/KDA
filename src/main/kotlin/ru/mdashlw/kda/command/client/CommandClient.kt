@@ -23,7 +23,7 @@ import ru.mdashlw.kda.command.replies.Replies
 import ru.mdashlw.kda.command.replymodifier.ReplyModifier
 import ru.mdashlw.kda.command.replymodifier.impl.ColorModifier
 import ru.mdashlw.kda.command.replymodifier.register
-import ru.mdashlw.util.string.removeExtraSpaces
+import ru.mdashlw.util.removeExtraSpaces
 import java.util.*
 import kotlin.coroutines.CoroutineContext
 import kotlin.reflect.KClass

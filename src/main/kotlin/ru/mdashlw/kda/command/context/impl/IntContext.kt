@@ -2,7 +2,7 @@ package ru.mdashlw.kda.command.context.impl
 
 import ru.mdashlw.kda.command.Command
 import ru.mdashlw.kda.command.context.CommandContext
-import ru.mdashlw.util.string.removeNumberFormat
+import ru.mdashlw.util.removeNumberFormat
 import kotlin.reflect.KParameter
 
 object IntContext : CommandContext<Int>() {
