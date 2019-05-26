@@ -11,6 +11,7 @@ import ru.mdashlw.kda.command.context.CommandContext
 import ru.mdashlw.kda.command.context.impl.*
 import ru.mdashlw.kda.command.context.register
 import ru.mdashlw.kda.command.emotes.Emotes
+import ru.mdashlw.kda.command.events.CommandInvokeEvent
 import ru.mdashlw.kda.command.exceptionhandler.ExceptionHandler
 import ru.mdashlw.kda.command.exceptionhandler.impl.*
 import ru.mdashlw.kda.command.exceptionhandler.register
@@ -79,7 +80,6 @@ class CommandClient(
         ColorModifier.register()
     }
 
-    @Suppress("NAME_SHADOWING")
     override fun onGuildMessageReceived(event: GuildMessageReceivedEvent) {
         val author = event.author
         val member = event.member
@@ -96,14 +96,15 @@ class CommandClient(
             return
         }
 
+        val jda = event.jda
         val channel = event.channel
         val message = event.message
         content = content.substring(guildSettings.prefix.length).trim()
         val args = content.split(' ')
 
         val command = findCommand(args[0]) ?: return
-        val event = command.Event(
-            event.jda,
+        val commandEvent = command.Event(
+            jda,
             guild,
             author,
             member,
@@ -114,15 +115,18 @@ class CommandClient(
             resourceBundles[guildSettings.locale] ?: error("No resource bundle for locale ${guildSettings.locale}")
         )
 
+        jda.eventManager.handle(CommandInvokeEvent(jda, event.responseNumber, command, commandEvent, args))
+
         GlobalScope.launch(executor) {
             if (requiresEmbedLinks && !guild.selfMember.hasPermission(channel, Permission.MESSAGE_EMBED_LINKS)) {
-                event.run {
+                commandEvent.run {
                     reply(localize("replies.no_embed_links_permission")).queue()
                 }
+
                 return@launch
             }
 
-            CommandHandler.handle(command, event, args.drop(1))
+            CommandHandler.handle(command, commandEvent, args.drop(1))
         }
     }
 

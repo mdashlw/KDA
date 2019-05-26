@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.exceptions.InsufficientPermissionException
 import net.dv8tion.jda.api.requests.RestAction
 import ru.mdashlw.kda.builder.impl.EmbedBuilder
 import ru.mdashlw.kda.embed
-import ru.mdashlw.kda.extensions.wait
+import ru.mdashlw.kda.waiter.util.waitFor
 import java.time.Duration
 
 class Pagination<T>(
@@ -52,7 +52,7 @@ class Pagination<T>(
             it.addReaction(ARROW_RIGHT).queue()
         }
 
-        api.wait<MessageReactionAddEvent>(
+        waitFor<MessageReactionAddEvent>(
             0,
             timeout,
             onCancel = {

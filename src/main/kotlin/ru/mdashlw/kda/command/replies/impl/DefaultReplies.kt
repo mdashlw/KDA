@@ -9,7 +9,7 @@ import ru.mdashlw.kda.command.replies.Replies
 object DefaultReplies : Replies {
     override var help: (command: Command, event: Command.Event) -> MessageAction =
         { command, event ->
-            val self = event.api.selfUser
+            val self = event.jda.selfUser
 
             event.reply {
                 title = "`${command.name}`"

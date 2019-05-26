@@ -13,7 +13,7 @@ object DefaultUncaughtExceptionHandler : UncaughtExceptionHandler {
             title = event.localize("exceptionhandlers.uncaught.title")
             description = exception.toString()
 
-            event.api.getUserById(CommandClient.INSTANCE.owner)?.let {
+            event.jda.getUserById(CommandClient.INSTANCE.owner)?.let {
                 footer {
                     text = event.localize("exceptionhandlers.uncaught.footer", it.asTag)
                     icon = it.effectiveAvatarUrl

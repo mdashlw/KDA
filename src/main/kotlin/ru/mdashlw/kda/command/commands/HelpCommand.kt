@@ -17,7 +17,7 @@ object HelpCommand : Command() {
             .distinct()
             .filter(Command::displayInHelp)
 
-        val self = api.selfUser
+        val self = jda.selfUser
 
         reply {
             description = localize("commands.help.reply.description", prefix)

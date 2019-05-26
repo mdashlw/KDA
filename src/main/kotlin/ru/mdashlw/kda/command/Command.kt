@@ -51,7 +51,7 @@ abstract class Command {
     open fun checkAccess(event: Event): Boolean = true
 
     inner class Event(
-        val api: JDA,
+        val jda: JDA,
         val guild: Guild,
         val user: User,
         val member: Member,
@@ -96,7 +96,7 @@ abstract class Command {
             block: EmbedBuilder.(Collection<T>) -> Unit
         ) {
             Pagination(
-                api, channel.idLong, setOf(user.idLong), timeout, itemsOnPage, content
+                jda, channel.idLong, setOf(user.idLong), timeout, itemsOnPage, content
             ) {
                 CommandClient.INSTANCE.replyModifiers
                     .filter { it.check(this@Command, this@Event) }
@@ -121,7 +121,7 @@ abstract class Command {
             CommandClient.INSTANCE.replies.error(this@Command, this@Event, message)
 
         fun copy(command: Command): Event =
-            command.Event(api, guild, user, member, channel, message, guildSettings, prefix, localization)
+            command.Event(jda, guild, user, member, channel, message, guildSettings, prefix, localization)
     }
 
     class Help : Exception()
