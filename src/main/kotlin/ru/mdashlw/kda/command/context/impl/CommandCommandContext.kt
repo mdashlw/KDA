@@ -17,7 +17,7 @@ object CommandCommandContext : CommandContext<Command>() {
             ?: throw Error(event.localize("contexts.command.unknown", text))
 
     private fun find(name: String, parent: Command? = null): Command? {
-        val command = findCommand(name, parent)
+        val command = findCommand(name.substringBefore(' '), parent)
 
         if (command != null && ' ' in name) {
             return find(name.substringAfter(' '), command)
