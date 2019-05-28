@@ -14,7 +14,8 @@ internal inline fun <B : Builder<T>, T> build(builder: B, block: B.() -> Unit): 
 
 inline fun jda(block: JdaBuilder.() -> Unit): JDA = build(JdaBuilder(), block)
 
-inline fun embed(block: EmbedBuilder.() -> Unit): MessageEmbed = build(EmbedBuilder(), block)
+inline fun embed(parent: MessageEmbed? = null, block: EmbedBuilder.() -> Unit): MessageEmbed =
+    build(EmbedBuilder(parent), block)
 
 inline fun <T> pagination(content: Collection<T>, block: PaginationBuilder<T>.() -> Unit): Pagination<T> =
     build(PaginationBuilder(content), block)

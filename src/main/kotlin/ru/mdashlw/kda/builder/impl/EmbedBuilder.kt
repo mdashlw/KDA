@@ -11,17 +11,17 @@ import java.awt.Color
 import java.time.OffsetDateTime
 
 @KdaDslMarker
-class EmbedBuilder : Builder<MessageEmbed>() {
-    var url: String? = null
-    var title: String? = null
-    var description: String? = null
-    var timestamp: OffsetDateTime? = null
-    var color: Color? = null
-    var thumbnail: MessageEmbed.Thumbnail? = null
-    var author: MessageEmbed.AuthorInfo? = null
-    var footer: MessageEmbed.Footer? = null
-    var image: MessageEmbed.ImageInfo? = null
-    var fields = mutableListOf<MessageEmbed.Field>()
+class EmbedBuilder(parent: MessageEmbed? = null) : Builder<MessageEmbed>() {
+    var url: String? = parent?.url
+    var title: String? = parent?.title
+    var description: String? = parent?.description
+    var timestamp: OffsetDateTime? = parent?.timestamp
+    var color: Color? = parent?.color
+    var thumbnail: MessageEmbed.Thumbnail? = parent?.thumbnail
+    var author: MessageEmbed.AuthorInfo? = parent?.author
+    var footer: MessageEmbed.Footer? = parent?.footer
+    var image: MessageEmbed.ImageInfo? = parent?.image
+    var fields: MutableList<MessageEmbed.Field> = parent?.fields ?: mutableListOf()
 
     inline fun thumbnail(block: ThumbnailBuilder.() -> Unit) {
         thumbnail = build(ThumbnailBuilder(), block)
