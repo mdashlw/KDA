@@ -2,7 +2,7 @@ package ru.mdashlw.kda.command
 
 abstract class SubCommand(val parent: Command) : Command() {
     override fun fixMeta() {
-        val name = resolveNames(this).joinToString(" ")
+        val name = resolveNames(this).reversed().joinToString(" ")
 
         usage = "$name $usage".trim()
         examples = examples?.map { "$name $it".trim() }
@@ -23,7 +23,7 @@ abstract class SubCommand(val parent: Command) : Command() {
             names += resolveNames(command.parent)
         }
 
-        return names.reversed()
+        return names
     }
 
     override fun register() {
