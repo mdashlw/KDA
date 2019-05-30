@@ -21,7 +21,7 @@ class EmbedBuilder(parent: MessageEmbed? = null) : Builder<MessageEmbed>() {
     var author: MessageEmbed.AuthorInfo? = parent?.author
     var footer: MessageEmbed.Footer? = parent?.footer
     var image: MessageEmbed.ImageInfo? = parent?.image
-    var fields: MutableList<MessageEmbed.Field> = parent?.fields ?: mutableListOf()
+    var fields: MutableList<MessageEmbed.Field> = parent?.fields?.toMutableList() ?: mutableListOf()
 
     inline fun thumbnail(block: ThumbnailBuilder.() -> Unit) {
         thumbnail = build(ThumbnailBuilder(), block)
