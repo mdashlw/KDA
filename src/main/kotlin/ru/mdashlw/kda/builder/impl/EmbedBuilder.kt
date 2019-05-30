@@ -1,9 +1,7 @@
 package ru.mdashlw.kda.builder.impl
 
 import net.dv8tion.jda.api.EmbedBuilder
-import net.dv8tion.jda.api.entities.EmbedType
-import net.dv8tion.jda.api.entities.MessageEmbed
-import net.dv8tion.jda.api.entities.Role
+import net.dv8tion.jda.api.entities.*
 import ru.mdashlw.kda.build
 import ru.mdashlw.kda.builder.Builder
 import ru.mdashlw.kda.dsl.KdaDslMarker
@@ -41,6 +39,54 @@ class EmbedBuilder(parent: MessageEmbed? = null) : Builder<MessageEmbed>() {
 
     inline fun field(block: FieldBuilder.() -> Unit) {
         fields.add(build(FieldBuilder(), block))
+    }
+
+    fun thumbnail(user: User) {
+        thumbnail {
+            url = user.effectiveAvatarUrl
+        }
+    }
+
+    fun thumbnail(member: Member) {
+        thumbnail(member.user)
+    }
+
+    fun author(user: User) {
+        author {
+            name = user.name
+            icon = user.effectiveAvatarUrl
+        }
+    }
+
+    fun author(member: Member) {
+        author {
+            name = member.effectiveName
+            icon = member.user.effectiveAvatarUrl
+        }
+    }
+
+    fun footer(user: User) {
+        footer {
+            text = user.name
+            icon = user.effectiveAvatarUrl
+        }
+    }
+
+    fun footer(member: Member) {
+        footer {
+            text = member.effectiveName
+            icon = member.user.effectiveAvatarUrl
+        }
+    }
+
+    fun image(user: User) {
+        image {
+            url = user.effectiveAvatarUrl
+        }
+    }
+
+    fun image(member: Member) {
+        image(member.user)
     }
 
     override fun build(): MessageEmbed =
