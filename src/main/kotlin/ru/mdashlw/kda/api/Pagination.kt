@@ -22,9 +22,7 @@ class Pagination<T>(
     private val embed: EmbedBuilder.(Collection<T>) -> Unit
 ) {
     private val chunked: List<List<T>> = content.chunked(itemsPerPage)
-
     private var page: Int = 0
-
     private var messageId: Long = 0
 
     private val total: Int
