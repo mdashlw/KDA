@@ -6,7 +6,7 @@ import ru.mdashlw.kda.internal.command.CommandClient
 
 object HelpCommand : Command() {
     override val name: String = "help"
-    override val aliases: List<String>? = listOf("commands", "cmds")
+    override val aliases: List<String> = listOf("commands", "cmds")
     override var usage: String = "[command]"
 
     override fun description(event: Event): String = event.localize("commands.help.description")
@@ -17,14 +17,14 @@ object HelpCommand : Command() {
             .distinct()
             .filter(Command::displayInHelp)
 
-        val self = jda.selfUser
+        val selfUser = jda.selfUser
 
         reply {
             description = localize("commands.help.reply.description", prefix)
 
             author {
-                name = localize("commands.help.reply.title", self.name)
-                icon = self.effectiveAvatarUrl
+                name = localize("commands.help.reply.title", selfUser.name)
+                icon = selfUser.effectiveAvatarUrl
             }
 
             field {
