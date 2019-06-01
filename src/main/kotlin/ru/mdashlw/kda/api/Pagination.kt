@@ -79,17 +79,19 @@ class Pagination<T>(
         ) {
             val emote = it.reactionEmote.name
 
-            if (emote == ARROW_LEFT || emote == ARROW_RIGHT) {
-                try {
-                    it.reaction.removeReaction(it.user).queue()
-                } catch (exception: InsufficientPermissionException) {
-                }
+            if (emote != ARROW_LEFT && emote != ARROW_RIGHT) {
+                return@waitFor
+            }
+
+            try {
+                it.reaction.removeReaction(it.user).queue()
+            } catch (exception: InsufficientPermissionException) {
             }
 
             val newPage = when (emote) {
                 ARROW_LEFT -> page - 1
                 ARROW_RIGHT -> page + 1
-                else -> 0
+                else -> throw IllegalStateException()
             }
 
             if (canPaginate(newPage)) {

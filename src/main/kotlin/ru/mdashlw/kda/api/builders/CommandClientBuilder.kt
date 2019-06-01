@@ -16,7 +16,7 @@ import kotlin.coroutines.CoroutineContext
 
 @KdaDslMarker
 class CommandClientBuilder : Builder<CommandClient>() {
-    var owner: Long = 0L
+    var ownerId: Long = 0L
     lateinit var prefix: String
     var languages: List<Locale> = listOf(Locale.ENGLISH)
     var requiresEmbedLinks: Boolean = true
@@ -26,8 +26,7 @@ class CommandClientBuilder : Builder<CommandClient>() {
             CustomizableThreadFactory("KDA CommandHandler %d")
         ).asCoroutineDispatcher()
     var guildSettingsProvider: GuildSettingsProvider? = null
-    var uncaughtExceptionHandler: UncaughtExceptionHandler =
-        DefaultUncaughtExceptionHandler
+    var uncaughtExceptionHandler: UncaughtExceptionHandler = DefaultUncaughtExceptionHandler
     var replies: Replies = DefaultReplies
     var colors: Colors = DefaultColors
     var emotes: Emotes = DefaultEmotes
@@ -46,7 +45,7 @@ class CommandClientBuilder : Builder<CommandClient>() {
 
     override fun build(): CommandClient =
         CommandClient(
-            owner,
+            ownerId,
             prefix,
             languages,
             requiresEmbedLinks,

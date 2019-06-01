@@ -6,6 +6,9 @@ abstract class PrivateSubCommand(parent: Command) : SubCommand(parent) {
     open val users: Set<Long> =
         ((parent as? PrivateCommand)?.users ?: (parent as? PrivateSubCommand)?.users).orEmpty()
 
-    override fun checkAccess(event: Event): Boolean =
-        (event.member.idLong.run { this == CommandClient.INSTANCE.owner || this in users })
+    override fun checkAccess(event: Event): Boolean {
+        val id = event.member.idLong
+
+        return id == CommandClient.INSTANCE.ownerId || id in users
+    }
 }

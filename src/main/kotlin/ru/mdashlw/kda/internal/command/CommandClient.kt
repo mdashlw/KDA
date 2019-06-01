@@ -17,7 +17,7 @@ import kotlin.coroutines.CoroutineContext
 import kotlin.reflect.KClass
 
 class CommandClient(
-    val owner: Long,
+    val ownerId: Long,
     val prefix: String,
     languages: List<Locale>,
     val requiresEmbedLinks: Boolean,
