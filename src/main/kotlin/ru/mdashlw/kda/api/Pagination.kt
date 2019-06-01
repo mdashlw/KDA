@@ -107,7 +107,7 @@ class Pagination<T>(
             }
         }
 
-        embed(chunked[page])
+        embed(chunked.getOrNull(page).orEmpty())
     }
 
     private fun canPaginate(page: Int): Boolean = page in 0 until total
