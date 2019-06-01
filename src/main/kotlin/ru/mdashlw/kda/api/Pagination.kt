@@ -40,7 +40,7 @@ class Pagination<T>(
     fun display() {
         val channel = channel
 
-        if (total == 1) {
+        if (total <= 1) {
             channel.sendMessage(generateEmbed()).queue()
             return
         }
