@@ -23,10 +23,10 @@ object DefaultReplies : Replies {
                     text = event.localize("replies.help.footer")
                 }
 
-                command.aliases.let {
+                if (command.aliases.isNotEmpty()) {
                     field {
                         name = event.localize("replies.help.fields.aliases.name")
-                        value = it.joinToString()
+                        value = command.aliases.joinToString()
                         inline = false
                     }
                 }
@@ -41,10 +41,10 @@ object DefaultReplies : Replies {
                     inline = false
                 }
 
-                command.examples.let {
+                if (command.examples.isNotEmpty()) {
                     field {
                         name = event.localize("replies.help.fields.examples.name")
-                        value = it.joinToString("\n") { "${event.prefix}$it" }
+                        value = command.examples.joinToString("\n") { "${event.prefix}$it" }
                         inline = false
                     }
                 }
