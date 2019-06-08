@@ -3,6 +3,7 @@ package ru.mdashlw.kda.internal.command
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import net.dv8tion.jda.api.Permission
+import net.dv8tion.jda.api.entities.User
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import ru.mdashlw.kda.api.command.*
@@ -68,13 +69,8 @@ class CommandClient(
     }
 
     override fun onGuildMessageReceived(event: GuildMessageReceivedEvent) {
-        val author = event.author
-        val member = event.member
-
-        if (author.isBot || member == null) {
-            return
-        }
-
+        val author = event.author.takeUnless(User::isBot) ?: return
+        val member = event.member ?: return
         val guild = event.guild
         var content = event.message.contentRaw.trim().removeExtraSpaces()
         val guildSettings = guildSettingsProvider?.provide(guild) ?: EmptyGuildSettings
