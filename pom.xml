@@ -5,12 +5,12 @@
 
     <groupId>ru.mdashlw.kda</groupId>
     <artifactId>kda</artifactId>
-    <version>3.0.5</version>
+    <version>3.0.6</version>
     <packaging>jar</packaging>
 
     <name>ru.mdashlw.kda kda</name>
     <description>Kotlin utilities for JDA</description>
-    <url>https://gitlab.com/mdashlw/kda</url>
+    <url>https://github.com/mdashlw/KDA</url>
     <inceptionYear>2019</inceptionYear>
     <licenses>
         <license>
@@ -33,13 +33,13 @@
     </developers>
 
     <scm>
-        <connection>scm:git:https://gitlab.com/mdashlw/kda</connection>
-        <developerConnection>scm:git:https://gitlab.com/mdashlw/kda</developerConnection>
-        <url>https://gitlab.com/mdashlw/kda</url>
+        <connection>scm:git:https://github.com/mdashlw/KDA</connection>
+        <developerConnection>scm:git:https://github.com/mdashlw/KDA</developerConnection>
+        <url>https://github.com/mdashlw/KDA</url>
     </scm>
     <issueManagement>
-        <system>GitLab</system>
-        <url>https://gitlab.com/mdashlw/kda/issues</url>
+        <system>GitHub</system>
+        <url>https://github.com/mdashlw/KDA/issues</url>
     </issueManagement>
     <distributionManagement>
         <repository>
