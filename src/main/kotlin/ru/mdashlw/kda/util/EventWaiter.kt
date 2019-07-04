@@ -10,6 +10,5 @@ inline fun <reified T : GenericEvent> waitFor(
     noinline onCancel: () -> Unit = {},
     noinline predicate: (T) -> Boolean = { true },
     noinline action: (T) -> Unit
-) {
-    WaitingEvent(T::class, amount, timeout, onCancel, predicate, action).register()
-}
+): WaitingEvent<T> =
+    WaitingEvent(T::class, amount, timeout, onCancel, predicate, action).also(WaitingEvent<*>::register)
