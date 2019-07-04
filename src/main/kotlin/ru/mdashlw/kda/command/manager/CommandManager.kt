@@ -107,7 +107,7 @@ object CommandManager : ListenerAdapter() {
 
     private fun execute(command: Command, context: Command.Context, args: List<String>) {
         try {
-            if (!command.access(context)) {
+            if (!command.access(context) && context.user.idLong != owner) {
                 throw NoAccessException()
             }
 
