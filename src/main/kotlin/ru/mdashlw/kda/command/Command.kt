@@ -119,7 +119,8 @@ class Command(
 
         fun error(message: String): Nothing = throw Error(message)
 
-        fun copy(command: Command) = command.Context(jda, guild, guildSettings, channel, user, member, message, args)
+        fun copy(command: Command, args: List<String>) =
+            command.Context(jda, guild, guildSettings, channel, user, member, message, args)
     }
 
     class Help : RuntimeException()

@@ -126,10 +126,12 @@ object CommandManager : ListenerAdapter() {
             val subCommand = getCommand(args[0], command)
 
             if (subCommand != null) {
+                val newArgs = args.drop(1)
+
                 return execute(
                     subCommand,
-                    context.copy(subCommand),
-                    args.drop(1)
+                    context.copy(subCommand, newArgs),
+                    newArgs
                 )
             }
 
