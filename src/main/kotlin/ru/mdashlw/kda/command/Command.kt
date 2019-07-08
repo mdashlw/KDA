@@ -119,7 +119,7 @@ class Command(
 
         fun error(message: String): Nothing = throw Error(message)
 
-        fun copy(command: Command, args: List<String>) =
+        fun copy(command: Command, args: List<String> = this.args) =
             command.Context(jda, guild, guildSettings, channel, user, member, message, args)
     }
 
