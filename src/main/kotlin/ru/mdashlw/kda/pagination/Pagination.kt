@@ -39,9 +39,14 @@ class Pagination<T>(
         provider(chunks.getOrNull(page).orEmpty())
     }
 
+    @Suppress("NAME_SHADOWING")
     private fun paginate(page: Int) {
-        if (page !in 0 until total) {
-            return
+        var page = page
+
+        if (page < 0) {
+            page = total - 1
+        } else if (page >= total) {
+            page = 0
         }
 
         this.page = page

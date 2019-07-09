@@ -1,6 +1,7 @@
 package ru.mdashlw.kda.command.replies
 
 import net.dv8tion.jda.api.Permission
+import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.requests.restaction.MessageAction
 import ru.mdashlw.kda.command.Command
 import ru.mdashlw.kda.command.Replies
@@ -93,5 +94,10 @@ object DefaultReplies : Replies {
                 title = "Error"
                 description = "${CommandManager.emotes.error.orEmpty()} $message"
             }
+        }
+
+    override var wrongChannel: (command: Command, context: Command.Context, channel: TextChannel) -> MessageAction =
+        { _: Command, context: Command.Context, channel: TextChannel ->
+            context.reply("Commands should go in ${channel.asMention}.")
         }
 }

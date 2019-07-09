@@ -66,11 +66,7 @@ class Command(
         fun reply(text: CharSequence): MessageAction = channel.sendMessage(text)
 
         fun reply(embed: MessageEmbed): MessageAction =
-            if (!guild.selfMember.hasPermission(channel, Permission.MESSAGE_EMBED_LINKS)) {
-                channel.sendMessage("I need the **Embed Links** permission.").embed(embed)
-            } else {
-                channel.sendMessage(embed)
-            }
+            channel.sendMessage(embed)
 
         fun reply(block: EmbedBuilder.() -> Unit): MessageAction {
             val builder = EmbedBuilder()

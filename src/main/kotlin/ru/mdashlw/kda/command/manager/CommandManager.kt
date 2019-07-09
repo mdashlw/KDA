@@ -3,6 +3,7 @@ package ru.mdashlw.kda.command.manager
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.launch
+import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.User
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
@@ -88,6 +89,7 @@ object CommandManager : ListenerAdapter() {
         var content = message.contentRaw.removeExtraSpaces()
         val guildSettings = guildSettingsProvider?.provide(guild) ?: EmptyGuildSettings
         val prefix = guildSettings.prefix
+        val commandsChannel = guildSettings.channel
 
         if (!content.startsWith(prefix, true)) {
             return
@@ -99,6 +101,11 @@ object CommandManager : ListenerAdapter() {
         val command = getCommand(args[0]) ?: return
         args = args.drop(1)
         val context = command.Context(jda, guild, guildSettings, channel, user, member, message, args)
+
+        if (channel.idLong != -1L && channel.idLong != commandsChannel && !member.hasPermission(Permission.MANAGE_SERVER)) {
+            replies.wrongChannel(command, context, guild.getTextChannelById(commandsChannel) ?: return)
+            return
+        }
 
         GlobalScope.launch(executor) {
             execute(command, context, args)
