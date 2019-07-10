@@ -80,7 +80,6 @@ class Command(
             return reply(builder.apply(block).build())
         }
 
-        @Suppress("NestedLambdaShadowedImplicitParameter")
         fun <T> replyPagination(
             content: Collection<T>,
             timeout: Duration = Duration.ofMinutes(10),
@@ -96,14 +95,14 @@ class Command(
                 timeout,
                 itemsPerPage,
                 displayFooter
-            ) {
+            ) { collection ->
                 CommandManager.replyModifiers
                     .filter { it.check(this@Command, this@Context) }
                     .forEach {
                         run(it.modify(this@Command, this@Context))
                     }
 
-                provider(this, it)
+                provider(this, collection)
             }.init()
         }
 

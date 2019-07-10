@@ -6,7 +6,7 @@
 
     <groupId>ru.mdashlw.kda</groupId>
     <artifactId>KDA</artifactId>
-    <version>5.1.0</version>
+    <version>5.1.1</version>
     <packaging>jar</packaging>
 
     <name>ru.mdashlw.kda KDA</name>
@@ -75,7 +75,7 @@
         <dependency>
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
-            <version>4.BETA.0_20</version>
+            <version>4.BETA.0_22</version>
             <exclusions>
                 <exclusion>
                     <groupId>club.minnced</groupId>
