@@ -102,8 +102,8 @@ object CommandManager : ListenerAdapter() {
         args = args.drop(1)
         val context = command.Context(jda, guild, guildSettings, channel, user, member, message, args)
 
-        if (channel.idLong != -1L && channel.idLong != commandsChannel && !member.hasPermission(Permission.MANAGE_SERVER)) {
-            replies.wrongChannel(command, context, guild.getTextChannelById(commandsChannel) ?: return)
+        if (commandsChannel != -1L && channel.idLong != commandsChannel && !member.hasPermission(Permission.MANAGE_SERVER)) {
+            replies.wrongChannel(command, context, guild.getTextChannelById(commandsChannel) ?: return).queue()
             return
         }
 
