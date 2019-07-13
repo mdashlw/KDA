@@ -3,8 +3,8 @@ package ru.mdashlw.kda.command.contexts
 import ru.mdashlw.kda.command.Command
 import ru.mdashlw.util.format
 
-fun Command.Context.float(range: ClosedFloatingPointRange<Float>? = null, fallback: Float? = null): Float {
-    val arg = take() ?: return fallback ?: throw Command.Help()
+fun Command.Context.nullableFloat(range: ClosedFloatingPointRange<Float>? = null): Float? {
+    val arg = take() ?: return null
     val number = arg.toFloatOrNull() ?: error("`$arg` is not a number.")
 
     if (range != null && number !in range) {
@@ -13,3 +13,6 @@ fun Command.Context.float(range: ClosedFloatingPointRange<Float>? = null, fallba
 
     return number
 }
+
+fun Command.Context.float(range: ClosedFloatingPointRange<Float>? = null, fallback: Float? = null): Float =
+    nullableFloat(range) ?: fallback ?: throw Command.Help()

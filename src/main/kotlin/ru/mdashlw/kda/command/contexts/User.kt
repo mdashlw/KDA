@@ -4,8 +4,8 @@ import net.dv8tion.jda.api.entities.User
 import ru.mdashlw.kda.command.Command
 import java.util.regex.Matcher
 
-fun Command.Context.user(fallback: User? = null): User {
-    val arg = take() ?: return fallback ?: throw Command.Help()
+fun Command.Context.nullableUser(): User? {
+    val arg = take() ?: return null
 
     return message.mentionedUsers.elementAtOrNull(index)
         ?: jda.getUsersByName(arg, true).firstOrNull()
@@ -17,3 +17,5 @@ fun Command.Context.user(fallback: User? = null): User {
         ?: arg.toLongOrNull()?.let { jda.getUserById(it) }
         ?: error("User `$arg` does not exist.")
 }
+
+fun Command.Context.user(fallback: User? = null): User = nullableUser() ?: fallback ?: throw Command.Help()

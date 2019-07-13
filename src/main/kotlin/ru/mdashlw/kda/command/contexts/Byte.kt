@@ -3,8 +3,8 @@ package ru.mdashlw.kda.command.contexts
 import ru.mdashlw.kda.command.Command
 import ru.mdashlw.util.format
 
-fun Command.Context.byte(range: IntRange? = null, fallback: Byte? = null): Byte {
-    val arg = take() ?: return fallback ?: throw Command.Help()
+fun Command.Context.nullableByte(range: IntRange? = null): Byte? {
+    val arg = take() ?: return null
     val number = arg.toByteOrNull() ?: error("`$arg` is not a number.")
 
     if (range != null && number !in range) {
@@ -13,3 +13,6 @@ fun Command.Context.byte(range: IntRange? = null, fallback: Byte? = null): Byte 
 
     return number
 }
+
+fun Command.Context.byte(range: IntRange? = null, fallback: Byte? = null): Byte =
+    nullableByte(range) ?: fallback ?: throw Command.Help()
