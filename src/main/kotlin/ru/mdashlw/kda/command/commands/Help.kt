@@ -6,6 +6,7 @@ import ru.mdashlw.kda.command.Command
 import ru.mdashlw.kda.command.contexts.command
 import ru.mdashlw.kda.command.manager.CommandManager
 
+@Suppress("NestedLambdaShadowedImplicitParameter")
 fun help() {
     command {
         name = "help"
@@ -18,9 +19,16 @@ fun help() {
                 .distinct()
                 .filter(Command::displayInHelp)
                 .groupBy(Command::category)
+                .toList()
             val selfUser = jda.selfUser
 
-            reply {
+            replyPagination(
+                commands,
+                itemsPerPage = 1,
+                displayFooter = false
+            ) {
+                val (category, list) = it.first()
+
                 description = "**Use `${guildSettings.prefix}help <command>` for additional info.**"
 
                 author {
@@ -28,20 +36,16 @@ fun help() {
                     icon = selfUser.effectiveAvatarUrl
                 }
 
-                commands.forEach { (category, list) ->
-                    field {
-                        name = "${category.name} Commands"
-                        value = list.joinToString("\n", prefix = "**", postfix = "**", transform = Command::name)
-                    }
-
-                    field {
-                        name = "Description"
-                        value = list.joinToString("\n") { it.description.substringBefore("\n") }
-                    }
-
-                    field {}
+                field {
+                    name = "${category.name} Commands"
+                    value = list.joinToString("\n", prefix = "**", postfix = "**", transform = Command::name)
                 }
-            }.queue()
+
+                field {
+                    name = "Description"
+                    value = list.joinToString("\n") { it.description.substringBefore("\n") }
+                }
+            }
         }
 
         action(minArgs = 1, maxArgs = -1) {

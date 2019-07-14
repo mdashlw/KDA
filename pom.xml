@@ -6,7 +6,7 @@
 
     <groupId>ru.mdashlw.kda</groupId>
     <artifactId>KDA</artifactId>
-    <version>5.2.2</version>
+    <version>5.2.3</version>
     <packaging>jar</packaging>
 
     <name>ru.mdashlw.kda KDA</name>
