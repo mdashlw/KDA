@@ -4,7 +4,7 @@ import ru.mdashlw.kda.command.Command
 import ru.mdashlw.kda.command.manager.CommandManager
 
 fun Command.Context.command(): Command {
-    var arg = take() ?: throw Command.Help()
+    var arg = text()
     var command: Command? = null
 
     do {
