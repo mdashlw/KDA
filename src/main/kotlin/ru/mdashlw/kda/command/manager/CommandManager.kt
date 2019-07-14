@@ -60,9 +60,6 @@ object CommandManager : ListenerAdapter() {
     fun getCommand(name: String, parent: Command? = null): Command? =
         (parent?.commands ?: commands)[name.toLowerCase()]
 
-    fun getCommandByQualifiedName(qualifiedName: String): Command? =
-        commands.values.distinct().find { it.qualifiedName == qualifiedName }
-
     fun getCommandAction(command: Command, args: Int): Command.Action? =
         command.actions.find { args >= it.minArgs && (it.maxArgs == -1 || args <= it.maxArgs) }
 

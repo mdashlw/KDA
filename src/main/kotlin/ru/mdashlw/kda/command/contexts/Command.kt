@@ -4,8 +4,13 @@ import ru.mdashlw.kda.command.Command
 import ru.mdashlw.kda.command.manager.CommandManager
 
 fun Command.Context.command(): Command {
-    val arg = take() ?: throw Command.Help()
+    var arg = take() ?: throw Command.Help()
+    var command: Command? = null
 
-    return CommandManager.getCommandByQualifiedName(arg)
-        ?: error("Command `$arg` does not exist.")
+    do {
+        command = CommandManager.getCommand(arg.substringBefore(" "), command)
+        arg = arg.substringAfter(" ")
+    } while (" " in arg)
+
+    return command ?: error("Command `$arg` does not exist.")
 }
