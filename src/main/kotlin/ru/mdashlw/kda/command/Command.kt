@@ -20,7 +20,7 @@ class Command(val parent: Command? = null) {
             qualifiedName = parent?.let { "${it.name} $value" } ?: value
             usage = ""
         }
-    var category: Category = MainCategory
+    var category: Category = parent?.category ?: MainCategory
         set(value) {
             field = value
             memberPermissions = category.memberPermissions
@@ -39,10 +39,10 @@ class Command(val parent: Command? = null) {
         set(value) {
             field = value.map { "$qualifiedName $it".trim() }
         }
-    var memberPermissions: EnumSet<Permission> = EnumSet.noneOf(Permission::class.java)
-    var selfPermissions: EnumSet<Permission> = EnumSet.noneOf(Permission::class.java)
-    var displayInHelp: Boolean = true
-    var access: Context.() -> Boolean = { true }
+    var memberPermissions: EnumSet<Permission> = category.memberPermissions
+    var selfPermissions: EnumSet<Permission> = category.selfPermissions
+    var displayInHelp: Boolean = category.displayInHelp
+    var access: Context.() -> Boolean = category.access
 
     var qualifiedName: String = ""
 
