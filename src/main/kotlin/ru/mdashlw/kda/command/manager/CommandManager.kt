@@ -9,7 +9,6 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import ru.mdashlw.kda.command.*
 import ru.mdashlw.kda.command.colors.DefaultColors
-import ru.mdashlw.kda.command.commands.help
 import ru.mdashlw.kda.command.emotes.DefaultEmotes
 import ru.mdashlw.kda.command.exceptionhandlers.*
 import ru.mdashlw.kda.command.exceptions.NoAccessException
@@ -44,7 +43,6 @@ object CommandManager : ListenerAdapter() {
     init {
         registerDefaultExceptionHandlers()
         registerDefaultReplyModifiers()
-        registerDefaultCommands()
     }
 
     private fun registerDefaultExceptionHandlers() {
@@ -57,10 +55,6 @@ object CommandManager : ListenerAdapter() {
 
     private fun registerDefaultReplyModifiers() {
         ColorModifier.register()
-    }
-
-    private fun registerDefaultCommands() {
-        help()
     }
 
     fun getCommand(name: String, parent: Command? = null): Command? =
