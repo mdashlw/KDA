@@ -28,22 +28,15 @@ fun command(block: Command.() -> Unit) {
     Command().apply(block).run {
         CommandManager.commands[name] = this
         aliases.forEach { CommandManager.commands[it] = this }
-
-        usage = "$name $usage"
-        examples = examples.map { "$name $it" }
+        hiddenAliases.forEach { CommandManager.commands[it] = this }
     }
 }
 
 fun Command.command(block: Command.() -> Unit) {
-    val parent = this
-
-    Command().apply(block).run {
-        parent.commands[name] = this
-        aliases.forEach { parent.commands[it] = this }
-
-        qualifiedName = "${parent.qualifiedName} $name"
-        usage = "$qualifiedName $usage"
-        examples = examples.map { "$qualifiedName $it" }
+    Command(this).apply(block).run {
+        this@command.commands[name] = this
+        aliases.forEach { this@command.commands[it] = this }
+        hiddenAliases.forEach { this@command.commands[it] = this }
     }
 }
 

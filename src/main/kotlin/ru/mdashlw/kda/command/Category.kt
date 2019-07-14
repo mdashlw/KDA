@@ -5,8 +5,8 @@ import java.util.*
 
 abstract class Category {
     abstract val name: String
-    open val memberPermissions: EnumSet<Permission>? = null
-    open val selfPermissions: EnumSet<Permission>? = null
+    open val memberPermissions: EnumSet<Permission> = EnumSet.noneOf(Permission::class.java)
+    open val selfPermissions: EnumSet<Permission> = EnumSet.noneOf(Permission::class.java)
     open val displayInHelp: Boolean = true
     open val access: Command.Context.() -> Boolean = { true }
 }

@@ -13,23 +13,38 @@ import java.time.Duration
 import java.util.*
 
 @KdaDslMarker
-class Command(
-    var category: Category = MainCategory,
-    var description: String = "<no description>",
-    var usage: String = "",
-    var aliases: List<String> = emptyList(),
-    var examples: List<String> = emptyList(),
-    var memberPermissions: EnumSet<Permission>? = category.memberPermissions,
-    var selfPermissions: EnumSet<Permission>? = category.selfPermissions,
-    var displayInHelp: Boolean = category.displayInHelp,
-    var access: Context.() -> Boolean = category.access
-) {
+class Command(val parent: Command? = null) {
     var name: String = ""
         set(value) {
             field = value
-            qualifiedName = value
+            qualifiedName = parent?.let { "${it.name} $value" } ?: value
+            usage = ""
         }
-    var qualifiedName: String = name
+    var category: Category = MainCategory
+        set(value) {
+            field = value
+            memberPermissions = category.memberPermissions
+            selfPermissions = category.selfPermissions
+            displayInHelp = category.displayInHelp
+            access = category.access
+        }
+    var description: String = "<no description>"
+    var usage: String = ""
+        set(value) {
+            field = "$qualifiedName $value".trim()
+        }
+    var aliases: List<String> = emptyList()
+    var hiddenAliases: List<String> = emptyList()
+    var examples: List<String> = emptyList()
+        set(value) {
+            field = value.map { "$qualifiedName $it".trim() }
+        }
+    var memberPermissions: EnumSet<Permission> = EnumSet.noneOf(Permission::class.java)
+    var selfPermissions: EnumSet<Permission> = EnumSet.noneOf(Permission::class.java)
+    var displayInHelp: Boolean = true
+    var access: Context.() -> Boolean = { true }
+
+    var qualifiedName: String = ""
 
     val commands = mutableMapOf<String, Command>()
     val actions = mutableListOf<Action>()

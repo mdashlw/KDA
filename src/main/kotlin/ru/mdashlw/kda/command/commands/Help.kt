@@ -38,6 +38,8 @@ fun help() {
                         name = "Description"
                         value = list.joinToString("\n") { it.description.substringBefore("\n") }
                     }
+
+                    field {}
                 }
             }.queue()
         }

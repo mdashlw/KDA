@@ -118,11 +118,11 @@ object CommandManager : ListenerAdapter() {
                 throw NoAccessException()
             }
 
-            if (command.memberPermissions?.let { context.member.hasPermission(it) } == false) {
+            if (!context.member.hasPermission(command.memberPermissions)) {
                 throw NoMemberPermissionsException()
             }
 
-            if (command.selfPermissions?.let { context.guild.selfMember.hasPermission(it) } == false) {
+            if (!context.guild.selfMember.hasPermission(command.selfPermissions)) {
                 throw NoSelfPermissionsException()
             }
 
