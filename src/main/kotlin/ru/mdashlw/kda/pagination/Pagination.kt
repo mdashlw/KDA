@@ -3,9 +3,7 @@ package ru.mdashlw.kda.pagination
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent
-import net.dv8tion.jda.api.exceptions.ErrorResponseException
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException
-import net.dv8tion.jda.api.requests.RestAction
 import ru.mdashlw.kda.builder.impl.EmbedBuilder
 import ru.mdashlw.kda.embed
 import ru.mdashlw.kda.util.waitFor
@@ -52,23 +50,9 @@ class Pagination<T>(
         this.page = page
 
         try {
-            jda.getTextChannelById(channelId)?.retrieveMessageById(messageId)?.queue(
-                { message ->
-                    message.editMessage(generateMessage()).queue(
-                        {},
-                        {
-                            if (it !is ErrorResponseException) {
-                                RestAction.getDefaultFailure().accept(it)
-                            }
-                        }
-                    )
-                },
-                {
-                    if (it !is ErrorResponseException) {
-                        RestAction.getDefaultFailure().accept(it)
-                    }
-                }
-            )
+            jda.getTextChannelById(channelId)?.retrieveMessageById(messageId)?.queue {
+                it.editMessage(generateMessage()).queue()
+            }
         } catch (exception: InsufficientPermissionException) {
         }
     }
@@ -79,34 +63,21 @@ class Pagination<T>(
 
         if (total <= 1) {
             try {
-                channel.sendMessage(message).queue(
-                    {},
-                    {
-                        if (it !is ErrorResponseException) {
-                            RestAction.getDefaultFailure().accept(it)
-                        }
-                    }
-                )
+                channel.sendMessage(message).queue()
             } catch (exception: InsufficientPermissionException) {
             }
             return
         }
 
         try {
-            channel.sendMessage(message).queue(
-                {
-                    messageId = it.idLong
+            channel.sendMessage(message).queue {
+                messageId = it.idLong
 
-                    it.addReaction(ARROW_LEFT).queue()
-                    it.addReaction(ARROW_RIGHT).queue()
-                },
-                {
-                    if (it !is ErrorResponseException) {
-                        RestAction.getDefaultFailure().accept(it)
-                    }
-                }
-            )
+                it.addReaction(ARROW_LEFT).queue()
+                it.addReaction(ARROW_RIGHT).queue()
+            }
         } catch (exception: InsufficientPermissionException) {
+            return
         }
 
         waitFor<MessageReactionAddEvent>(
@@ -114,55 +85,27 @@ class Pagination<T>(
             timeout = timeout,
             onCancel = {
                 try {
-                    channel.retrieveMessageById(messageId).queue(
-                        { message ->
-                            message.reactions
-                                .filter {
-                                    val emote = it.reactionEmote.name
-
-                                    emote == ARROW_LEFT || emote == ARROW_RIGHT
-                                }
-                                .forEach { reaction ->
-                                    reaction.removeReaction().queue(
-                                        {},
-                                        {
-                                            if (it !is ErrorResponseException) {
-                                                RestAction.getDefaultFailure().accept(it)
-                                            }
-                                        }
-                                    )
-                                }
-                        },
-                        {
-                            if (it !is ErrorResponseException) {
-                                RestAction.getDefaultFailure().accept(it)
-                            }
-                        }
-                    )
+                    channel.retrieveMessageById(messageId).queue { message ->
+                        message.reactions
+                            .filter { it.reactionEmote.name in arrows }
+                            .forEach { it.removeReaction().queue() }
+                    }
                 } catch (exception: InsufficientPermissionException) {
                 }
             },
             predicate = {
                 it.channel.idLong == channelId &&
                         it.messageIdLong == messageId &&
-                        it.user.idLong in userIds
+                        it.user.idLong in userIds &&
+                        it.reactionEmote.name in arrows
             }
         ) { event ->
-            val emote = event.reactionEmote.name
-
-            if (emote != ARROW_LEFT && emote != ARROW_RIGHT) {
-                return@waitFor
-            }
+            val reaction = event.reaction
+            val emote = reaction.reactionEmote.name
+            val user = event.user
 
             try {
-                event.reaction.removeReaction(event.user).queue(
-                    {},
-                    {
-                        if (it !is ErrorResponseException) {
-                            RestAction.getDefaultFailure().accept(it)
-                        }
-                    }
-                )
+                reaction.removeReaction(user).queue()
             } catch (exception: InsufficientPermissionException) {
             }
 
@@ -179,5 +122,6 @@ class Pagination<T>(
     companion object {
         const val ARROW_LEFT = "\u2B05"
         const val ARROW_RIGHT = "\u27A1"
+        val arrows = setOf(ARROW_LEFT, ARROW_RIGHT)
     }
 }

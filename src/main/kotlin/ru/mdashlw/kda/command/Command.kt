@@ -80,8 +80,7 @@ class Command(val parent: Command? = null) {
 
         fun reply(text: CharSequence): MessageAction = channel.sendMessage(text)
 
-        fun reply(embed: MessageEmbed): MessageAction =
-            channel.sendMessage(embed)
+        fun reply(embed: MessageEmbed): MessageAction = channel.sendMessage(embed)
 
         fun reply(block: EmbedBuilder.() -> Unit): MessageAction {
             val builder = EmbedBuilder()

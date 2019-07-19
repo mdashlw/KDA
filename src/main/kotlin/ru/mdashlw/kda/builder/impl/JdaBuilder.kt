@@ -41,6 +41,7 @@ class JdaBuilder : Builder<JDA>() {
     var contextMap: ConcurrentMap<String, String>? = null
         set(value) {
             field = value
+
             if (value != null) {
                 context = true
             }

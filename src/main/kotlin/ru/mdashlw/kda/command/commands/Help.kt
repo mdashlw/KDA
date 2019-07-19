@@ -22,13 +22,7 @@ fun help() {
                 .toList()
             val selfUser = jda.selfUser
 
-            replyPagination(
-                commands,
-                itemsPerPage = 1,
-                displayFooter = false
-            ) {
-                val (category, list) = it.first()
-
+            reply {
                 description = "**Use `${guildSettings.prefix}help <command>` for additional info.**"
 
                 author {
@@ -36,16 +30,16 @@ fun help() {
                     icon = selfUser.effectiveAvatarUrl
                 }
 
-                field {
-                    name = "${category.name} Commands"
-                    value = list.joinToString("\n", prefix = "**", postfix = "**", transform = Command::name)
+                commands.forEach { (category, list) ->
+                    field {
+                        name = "${category.name} Commands"
+                        value = list.joinToString("\n") {
+                            "**${it.name}** - ${it.description.substringBefore('\n')}"
+                        }
+                        inline = false
+                    }
                 }
-
-                field {
-                    name = "Description"
-                    value = list.joinToString("\n") { it.description.substringBefore("\n") }
-                }
-            }
+            }.queue()
         }
 
         action(minArgs = 1, maxArgs = -1) {

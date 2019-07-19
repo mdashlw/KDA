@@ -6,10 +6,12 @@ import kotlinx.coroutines.launch
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.User
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
+import net.dv8tion.jda.api.exceptions.InsufficientPermissionException
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import ru.mdashlw.kda.command.*
 import ru.mdashlw.kda.command.colors.DefaultColors
 import ru.mdashlw.kda.command.emotes.DefaultEmotes
+import ru.mdashlw.kda.command.events.CommandInvokeEvent
 import ru.mdashlw.kda.command.exceptionhandlers.*
 import ru.mdashlw.kda.command.exceptions.NoAccessException
 import ru.mdashlw.kda.command.exceptions.NoMemberPermissionsException
@@ -20,6 +22,7 @@ import ru.mdashlw.kda.command.replymodifiers.ColorModifier
 import ru.mdashlw.util.removeExtraSpaces
 import ru.mdashlw.util.thread.CustomizableThreadFactory
 import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 import kotlin.coroutines.CoroutineContext
 import kotlin.reflect.full.isSuperclassOf
 
@@ -94,9 +97,18 @@ object CommandManager : ListenerAdapter() {
         val context = command.Context(jda, guild, guildSettings, channel, user, member, message, args)
 
         if (commandsChannel != -1L && channel.idLong != commandsChannel && !member.hasPermission(Permission.MANAGE_SERVER)) {
-            replies.wrongChannel(command, context, guild.getTextChannelById(commandsChannel) ?: return).queue()
+            try {
+                message.delete().queue()
+            } catch (exception: InsufficientPermissionException) {
+            }
+
+            replies.wrongChannel(command, context, guild.getTextChannelById(commandsChannel) ?: return).queue {
+                it.delete().queueAfter(10, TimeUnit.SECONDS)
+            }
             return
         }
+
+        jda.eventManager.handle(CommandInvokeEvent(jda, event.responseNumber, command, context))
 
         GlobalScope.launch(executor) {
             execute(command, context, args)
@@ -135,19 +147,14 @@ object CommandManager : ListenerAdapter() {
 
             return execute(command, context, args.size)
         } catch (exception: Throwable) {
-            val exceptionHandler = getExceptionHandler(exception)
-                ?: uncaughtExceptionHandler
+            val exceptionHandler = getExceptionHandler(exception) ?: uncaughtExceptionHandler
 
             exceptionHandler.handle(command, context, exception)
         }
     }
 
     private fun execute(command: Command, context: Command.Context, args: Int) =
-        execute(
-            context,
-            getCommandAction(command, args)
-                ?: throw Command.Help()
-        )
+        execute(context, getCommandAction(command, args) ?: throw Command.Help())
 
     private fun execute(context: Command.Context, action: Command.Action) {
         if (action.typing) {

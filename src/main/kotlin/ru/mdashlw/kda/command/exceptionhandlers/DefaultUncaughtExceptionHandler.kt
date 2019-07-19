@@ -17,11 +17,11 @@ object DefaultUncaughtExceptionHandler : UncaughtExceptionHandler() {
 
             if (owner == null) {
                 footer {
-                    text = "Please redirect this message to the developer"
+                    text = "Redirect this message to the developer"
                 }
             } else {
                 footer {
-                    text = "Please redirect this message to the developer: ${owner.asTag}"
+                    text = "Redirect this message to the developer: ${owner.asTag}"
                     icon = owner.effectiveAvatarUrl
                 }
             }
