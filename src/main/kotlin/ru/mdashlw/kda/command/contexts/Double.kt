@@ -3,7 +3,7 @@ package ru.mdashlw.kda.command.contexts
 import ru.mdashlw.kda.command.Command
 import ru.mdashlw.util.format
 
-fun Command.Context.nullableDouble(range: ClosedFloatingPointRange<Double>? = null): Double? {
+fun Command.Context.optionalDouble(range: ClosedFloatingPointRange<Double>? = null): Double? {
     val arg = take() ?: return null
     val number = arg.toDoubleOrNull() ?: error("`$arg` is not a number.")
 
@@ -15,4 +15,4 @@ fun Command.Context.nullableDouble(range: ClosedFloatingPointRange<Double>? = nu
 }
 
 fun Command.Context.double(range: ClosedFloatingPointRange<Double>? = null, fallback: Double? = null): Double =
-    nullableDouble(range) ?: fallback ?: throw Command.Help()
+    optionalDouble(range) ?: fallback ?: throw Command.Help()

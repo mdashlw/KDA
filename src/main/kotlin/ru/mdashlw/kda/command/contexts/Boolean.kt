@@ -1,13 +1,12 @@
 package ru.mdashlw.kda.command.contexts
 
 import ru.mdashlw.kda.command.Command
-import ru.mdashlw.util.isBoolean
+import ru.mdashlw.kda.util.toBooleanOrNull
 
-fun Command.Context.nullableBoolean(): Boolean? {
+fun Command.Context.optionalBoolean(): Boolean? {
     val arg = take() ?: return null
 
-    return arg.takeIf(String::isBoolean)?.toBoolean()
-        ?: error("`$arg` is not a boolean. **(true/false)**")
+    return arg.toBooleanOrNull() ?: error("`$arg` is not a boolean. **(true/false)**")
 }
 
-fun Command.Context.boolean(fallback: Boolean? = null): Boolean = nullableBoolean() ?: fallback ?: throw Command.Help()
+fun Command.Context.boolean(fallback: Boolean? = null): Boolean = optionalBoolean() ?: fallback ?: throw Command.Help()

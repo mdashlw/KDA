@@ -3,7 +3,7 @@ package ru.mdashlw.kda.command.contexts
 import ru.mdashlw.kda.command.Command
 import ru.mdashlw.util.format
 
-fun Command.Context.nullableLong(range: LongRange? = null): Long? {
+fun Command.Context.optionalLong(range: LongRange? = null): Long? {
     val arg = take() ?: return null
     val number = arg.toLongOrNull() ?: error("`$arg` is not a number.")
 
@@ -15,4 +15,4 @@ fun Command.Context.nullableLong(range: LongRange? = null): Long? {
 }
 
 fun Command.Context.long(range: LongRange? = null, fallback: Long? = null): Long =
-    nullableLong(range) ?: fallback ?: throw Command.Help()
+    optionalLong(range) ?: fallback ?: throw Command.Help()

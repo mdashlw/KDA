@@ -3,7 +3,7 @@ package ru.mdashlw.kda.command.contexts
 import net.dv8tion.jda.api.entities.TextChannel
 import ru.mdashlw.kda.command.Command
 
-fun Command.Context.nullableTextChannel(): TextChannel? {
+fun Command.Context.optionalTextChannel(): TextChannel? {
     val arg = take() ?: return null
 
     return message.mentionedChannels.elementAtOrNull(index)
@@ -13,4 +13,4 @@ fun Command.Context.nullableTextChannel(): TextChannel? {
 }
 
 fun Command.Context.textChannel(fallback: TextChannel? = null): TextChannel =
-    nullableTextChannel() ?: fallback ?: throw Command.Help()
+    optionalTextChannel() ?: fallback ?: throw Command.Help()

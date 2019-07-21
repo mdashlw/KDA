@@ -3,7 +3,7 @@ package ru.mdashlw.kda.command.contexts
 import ru.mdashlw.kda.command.Command
 import ru.mdashlw.util.format
 
-fun Command.Context.nullableInt(range: IntRange? = null): Int? {
+fun Command.Context.optionalInt(range: IntRange? = null): Int? {
     val arg = take() ?: return null
     val number = arg.toIntOrNull() ?: error("`$arg` is not a number.")
 
@@ -15,4 +15,4 @@ fun Command.Context.nullableInt(range: IntRange? = null): Int? {
 }
 
 fun Command.Context.int(range: IntRange? = null, fallback: Int? = null): Int =
-    nullableInt(range) ?: fallback ?: throw Command.Help()
+    optionalInt(range) ?: fallback ?: throw Command.Help()

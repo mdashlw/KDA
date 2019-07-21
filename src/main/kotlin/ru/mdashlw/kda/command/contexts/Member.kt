@@ -5,7 +5,7 @@ import net.dv8tion.jda.api.entities.User
 import ru.mdashlw.kda.command.Command
 import java.util.regex.Matcher
 
-fun Command.Context.nullableMember(): Member? {
+fun Command.Context.optionalMember(): Member? {
     val arg = take() ?: return null
 
     return message.mentionedMembers.elementAtOrNull(index)
@@ -20,4 +20,4 @@ fun Command.Context.nullableMember(): Member? {
         ?: error("Member `$arg` does not exist.")
 }
 
-fun Command.Context.member(fallback: Member? = null): Member = nullableMember() ?: fallback ?: throw Command.Help()
+fun Command.Context.member(fallback: Member? = null): Member = optionalMember() ?: fallback ?: throw Command.Help()
