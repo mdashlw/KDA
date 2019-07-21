@@ -4,7 +4,7 @@ import ru.mdashlw.kda.command.Command
 import ru.mdashlw.util.format
 
 fun Command.Context.optionalByte(range: IntRange? = null): Byte? {
-    val arg = take() ?: return null
+    val arg = optionalWord() ?: return null
     val number = arg.toByteOrNull() ?: error("`$arg` is not a number.")
 
     if (range != null && number !in range) {

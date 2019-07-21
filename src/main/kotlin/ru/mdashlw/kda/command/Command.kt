@@ -68,7 +68,7 @@ class Command(val parent: Command? = null) {
     ) {
         var index: Int = -1
 
-        fun take(amount: Int = 1): String? =
+        fun take(amount: Int): String? =
             args
                 .take(amount)
                 .joinToString(" ")

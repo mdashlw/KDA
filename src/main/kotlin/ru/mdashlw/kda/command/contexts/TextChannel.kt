@@ -4,11 +4,11 @@ import net.dv8tion.jda.api.entities.TextChannel
 import ru.mdashlw.kda.command.Command
 
 fun Command.Context.optionalTextChannel(): TextChannel? {
-    val arg = take() ?: return null
+    val arg = optionalWord() ?: return null
 
     return message.mentionedChannels.elementAtOrNull(index)
         ?: jda.getTextChannelsByName(arg, true).firstOrNull()
-        ?: arg.toLongOrNull()?.let { jda.getTextChannelById(it) }
+        ?: arg.toLongOrNull()?.let(jda::getTextChannelById)
         ?: error("Text channel `#$arg` does not exist.")
 }
 

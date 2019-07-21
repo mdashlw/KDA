@@ -5,7 +5,7 @@ import ru.mdashlw.kda.command.Command
 import java.util.regex.Matcher
 
 fun Command.Context.optionalUser(): User? {
-    val arg = take() ?: return null
+    val arg = optionalWord() ?: return null
 
     return message.mentionedUsers.elementAtOrNull(index)
         ?: jda.getUsersByName(arg, true).firstOrNull()
@@ -14,8 +14,9 @@ fun Command.Context.optionalUser(): User? {
 
             jda.getUserByTag(matcher.group(1), matcher.group(2))
         }
-        ?: arg.toLongOrNull()?.let { jda.getUserById(it) }
+        ?: arg.toLongOrNull()?.let(jda::getUserById)
         ?: error("User `$arg` does not exist.")
 }
 
-fun Command.Context.user(fallback: User? = null): User = optionalUser() ?: fallback ?: throw Command.Help()
+fun Command.Context.user(fallback: User? = null): User =
+    optionalUser() ?: fallback ?: throw Command.Help()

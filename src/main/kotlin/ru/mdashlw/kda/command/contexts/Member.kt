@@ -6,7 +6,7 @@ import ru.mdashlw.kda.command.Command
 import java.util.regex.Matcher
 
 fun Command.Context.optionalMember(): Member? {
-    val arg = take() ?: return null
+    val arg = optionalWord() ?: return null
 
     return message.mentionedMembers.elementAtOrNull(index)
         ?: guild.getMembersByName(arg, true).firstOrNull()
@@ -16,8 +16,9 @@ fun Command.Context.optionalMember(): Member? {
 
             guild.getMemberByTag(matcher.group(1), matcher.group(2))
         }
-        ?: arg.toLongOrNull()?.let { guild.getMemberById(it) }
+        ?: arg.toLongOrNull()?.let(guild::getMemberById)
         ?: error("Member `$arg` does not exist.")
 }
 
-fun Command.Context.member(fallback: Member? = null): Member = optionalMember() ?: fallback ?: throw Command.Help()
+fun Command.Context.member(fallback: Member? = null): Member =
+    optionalMember() ?: fallback ?: throw Command.Help()

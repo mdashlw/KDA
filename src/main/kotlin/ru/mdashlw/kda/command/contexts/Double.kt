@@ -4,7 +4,7 @@ import ru.mdashlw.kda.command.Command
 import ru.mdashlw.util.format
 
 fun Command.Context.optionalDouble(range: ClosedFloatingPointRange<Double>? = null): Double? {
-    val arg = take() ?: return null
+    val arg = optionalWord() ?: return null
     val number = arg.toDoubleOrNull() ?: error("`$arg` is not a number.")
 
     if (range != null && number !in range) {
