@@ -6,7 +6,7 @@ import ru.mdashlw.kda.command.Command
 fun Command.Context.optionalVoiceChannel(): VoiceChannel? {
     val arg = optionalWord() ?: return null
 
-    return jda.getVoiceChannelByName(arg, true).firstOrNull()
+    return jda.getVoiceChannelsByName(arg, true).firstOrNull()
         ?: arg.toLongOrNull()?.let(jda::getVoiceChannelById)
         ?: error("Voice channel `$arg` does not exist.")
 }
