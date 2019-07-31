@@ -24,7 +24,6 @@ import ru.mdashlw.util.thread.CustomizableThreadFactory
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import kotlin.coroutines.CoroutineContext
-import kotlin.reflect.full.isSuperclassOf
 
 object CommandManager : ListenerAdapter() {
     var executor: CoroutineContext = Executors.newFixedThreadPool(
@@ -66,12 +65,8 @@ object CommandManager : ListenerAdapter() {
     fun getCommandAction(command: Command, args: Int): Command.Action? =
         command.actions.find { args >= it.minArgs && (it.maxArgs == -1 || args <= it.maxArgs) }
 
-    fun getExceptionHandler(exception: Throwable): ExceptionHandler<Throwable>? {
-        val exceptionClass = exception::class
-
-        return exceptionHandlers.find { it.type == exceptionClass }
-            ?: exceptionHandlers.find { it.type.isSuperclassOf(exceptionClass) }
-    }
+    fun getExceptionHandler(exception: Throwable): ExceptionHandler<Throwable>? =
+        exceptionHandlers.find { it.type.java.isInstance(exception) }
 
     override fun onGuildMessageReceived(event: GuildMessageReceivedEvent) {
         val jda = event.jda
