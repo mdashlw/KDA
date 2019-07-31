@@ -106,11 +106,11 @@ object CommandManager : ListenerAdapter() {
         jda.eventManager.handle(CommandInvokeEvent(jda, event.responseNumber, command, context))
 
         GlobalScope.launch(executor) {
-            execute(command, context, args)
+            execute(command, context)
         }
     }
 
-    private fun execute(command: Command, context: Command.Context, args: List<String>) {
+    private fun execute(command: Command, context: Command.Context) {
         try {
             if (!command.access(context) && context.user.idLong != owner) {
                 throw NoAccessException()
@@ -124,6 +124,8 @@ object CommandManager : ListenerAdapter() {
                 throw NoSelfPermissionsException()
             }
 
+            val args = context.args
+
             if (args.isEmpty()) {
                 return execute(command, context, 0)
             }
@@ -131,13 +133,7 @@ object CommandManager : ListenerAdapter() {
             val subCommand = getCommand(args[0], command)
 
             if (subCommand != null) {
-                val newArgs = args.drop(1)
-
-                return execute(
-                    subCommand,
-                    context.copy(subCommand, newArgs),
-                    newArgs
-                )
+                return execute(subCommand, context.copy(subCommand, args.drop(1)))
             }
 
             return execute(command, context, args.size)
